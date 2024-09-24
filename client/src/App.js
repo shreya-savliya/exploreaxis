@@ -1,9 +1,13 @@
-import React from 'react'
-import { Box } from '@mui/material'
+import React from 'react';
+import { Box, ThemeProvider } from '@mui/material';
+import { lightTheme } from './styles/theme';
+
 const App = () => {
   return (
-    <Box>Hello</Box>
+    <ThemeProvider theme={lightTheme}>
+      <Box>Hello</Box>
+    </ThemeProvider>
   )
 }
 
-export default App
+export default App;
