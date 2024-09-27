@@ -1,0 +1,9 @@
+{
+    "window.zoomLevel": 1,
+    "editor.cursorBlinking": "blink",
+    "editor.fontLigatures": false,
+    "editor.fontSize": 14,
+    "editor.formatOnSave": true,
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.preferredLightColorTheme": "Default Dark Modern"
+}
