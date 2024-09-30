@@ -1,11 +1,8 @@
-import React from 'react'
+import { Box } from "@mui/material";
+import React from "react";
 
 const Navbar = () => {
-    return (
-        <div>
+  return <Box>Navbar</Box>;
+};
 
-        </div>
-    )
-}
-
-export default Navbar
+export default Navbar;
