@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { colors } from "../styles/colors";
-import logo from "../assets/images/logo-transparent-png.png";
+import logo from "../assets/images/logo-transparent.png";
 import { useNavigate } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EmailIcon from "@mui/icons-material/Email";
