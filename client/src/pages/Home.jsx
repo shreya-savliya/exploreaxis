@@ -16,7 +16,9 @@ import {
 import FlightSearch from "../components/FlightSearch";
 import SendIcon from "@mui/icons-material/Send";
 import { colors } from "../styles/colors";
+import { useNavigate } from "react-router-dom";
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <Box>
       <Box sx={{ position: "relative", overflow: "hidden" }}>
@@ -74,6 +76,9 @@ const Home = () => {
               <Button
                 variant="outlined"
                 sx={{ backgroundColor: "transparent", fontSize: "14px" }}
+                onClick={() => {
+                  navigate("/flights");
+                }}
               >
                 See More Flights
               </Button>

@@ -18,6 +18,7 @@ import { SingleInputDateRangeField } from "@mui/x-date-pickers-pro/SingleInputDa
 import dayjs from "dayjs";
 import SearchIcon from "@mui/icons-material/Search";
 import { colors } from "../styles/colors";
+import { useLocation } from "react-router-dom";
 
 const FlightSearch = () => {
   const [from, setFrom] = useState("");
@@ -27,6 +28,7 @@ const FlightSearch = () => {
   const [passengerClass, setPassengerClass] = useState("Economy");
 
   const locations = ["Lahore", "Karachi", "Islamabad", "Peshawar", "Quetta"]; // example locations
+  const location = useLocation();
 
   const handleSwap = () => {
     const temp = from;
@@ -37,9 +39,11 @@ const FlightSearch = () => {
   return (
     <Box
       sx={{
-        border: `1px solid ${colors.basics.secondary}`,
-        borderRadius: "6px",
-        padding: 2,
+        ...(location.pathname !== "/" && {
+          border: `1px solid ${colors.basics.secondary}`,
+          borderRadius: "6px",
+          padding: 2,
+        }),
       }}
     >
       <Box>
