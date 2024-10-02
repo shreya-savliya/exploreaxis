@@ -32,7 +32,7 @@ const navItems = [
   {
     text: "Find Stays",
     icon: <LocalHotelIcon />,
-    route: "/",
+    route: "/hotels",
   },
 ];
 function HideOnScroll(props) {
