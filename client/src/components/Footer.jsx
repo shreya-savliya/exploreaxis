@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { colors } from "../styles/colors";
-import logo from "../assets/images/logo-transparent-png.png";
+import logo from "../assets/images/logo-transparent.png";
 import { useNavigate } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EmailIcon from "@mui/icons-material/Email";
@@ -23,7 +23,7 @@ const Footer = () => {
     >
       <Box
         sx={{
-          backgroundColor: colors.basics.secondary,
+          backgroundColor: colors.basics.primary,
           borderRadius: "4px",
           padding: "24px 48px 8px 24px",
         }}
@@ -33,7 +33,7 @@ const Footer = () => {
           sx={{
             display: "flex",
             justifyContent: "space-between",
-            flexDirection: { xs: "column", sm: "row" },
+            flexDirection: { xs: "column", lg: "row" },
             maxWidth: { xs: "100%", sm: "80%" },
             margin: "auto",
             width: "100%",
@@ -55,7 +55,11 @@ const Footer = () => {
             <Box>
               <Typography
                 component={"span"}
-                sx={{ fontSize: "16px", fontWeight: "bold" }}
+                sx={{
+                  fontSize: "16px",
+                  color: colors.basics.secondary,
+                  fontWeight: "bold",
+                }}
               >
                 Our Destination
               </Typography>
@@ -64,7 +68,10 @@ const Footer = () => {
               {["Canada", "Dubai", "France"].map((item) => {
                 return (
                   <ListItem disablePadding>
-                    <ListItemText primary={item} />
+                    <ListItemText
+                      primary={item}
+                      sx={{ color: colors.basics.secondary }}
+                    />
                   </ListItem>
                 );
               })}
@@ -75,7 +82,11 @@ const Footer = () => {
             <Box>
               <Typography
                 component={"span"}
-                sx={{ fontSize: "16px", fontWeight: "bold" }}
+                sx={{
+                  fontSize: "16px",
+                  color: colors.basics.secondary,
+                  fontWeight: "bold",
+                }}
               >
                 Help
               </Typography>
@@ -84,7 +95,10 @@ const Footer = () => {
               {["Terms Of Use", "Policy"].map((item) => {
                 return (
                   <ListItem disablePadding>
-                    <ListItemText primary={item} />
+                    <ListItemText
+                      primary={item}
+                      sx={{ color: colors.basics.secondary }}
+                    />
                   </ListItem>
                 );
               })}
@@ -95,23 +109,46 @@ const Footer = () => {
             <Box>
               <Typography
                 component={"span"}
-                sx={{ fontSize: "16px", fontWeight: "bold" }}
+                sx={{
+                  fontSize: "16px",
+                  color: colors.basics.secondary,
+                  fontWeight: "bold",
+                }}
               >
                 Contact Us
               </Typography>
             </Box>
             <List>
               <ListItem disablePadding>
-                <ListItemIcon sx={{ minWidth: "0px !important", pr: "5px" }}>
+                <ListItemIcon
+                  sx={{
+                    minWidth: "0px !important",
+                    color: colors.basics.secondary,
+                    pr: "5px",
+                  }}
+                >
                   <LocationOnIcon />
                 </ListItemIcon>
-                <ListItemText primary="299 Doon Valley Dr, Kitchener, ON N2G 4M4" />
+                <ListItemText
+                  primary="299 Doon Valley Dr, Kitchener, ON N2G 4M4"
+                  sx={{ color: colors.basics.secondary }}
+                  F
+                />
               </ListItem>
               <ListItem disablePadding>
-                <ListItemIcon sx={{ minWidth: "0px !important", pr: "5px" }}>
+                <ListItemIcon
+                  sx={{
+                    minWidth: "0px !important",
+                    color: colors.basics.secondary,
+                    pr: "5px",
+                  }}
+                >
                   <EmailIcon />
                 </ListItemIcon>
-                <ListItemText primary="support@exploreaxis.com" />
+                <ListItemText
+                  primary="support@exploreaxis.com"
+                  sx={{ color: colors.basics.secondary }}
+                />
               </ListItem>
             </List>
           </Box>

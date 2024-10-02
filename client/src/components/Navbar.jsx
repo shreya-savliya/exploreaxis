@@ -1,67 +1,169 @@
-import React from "react";
-import { AppBar, Toolbar, Typography, Box } from "@mui/material";
-import { Link } from "react-router-dom";
+import * as React from "react";
+import {
+  AppBar,
+  Box,
+  CssBaseline,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Toolbar,
+  Button,
+  ListItemIcon,
+  useScrollTrigger,
+  Slide,
+} from "@mui/material";
+import logo from "../assets/images/logo-transparent.png";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useNavigate } from "react-router-dom";
+import { colors } from "../styles/colors";
+import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
+import LocalHotelIcon from "@mui/icons-material/LocalHotel";
 
-const Navbar = () => {
+const drawerWidth = 240;
+const navItems = [
+  {
+    text: "Find Flight",
+    icon: <FlightTakeoffIcon />,
+    route: "/flights",
+  },
+  {
+    text: "Find Stays",
+    icon: <LocalHotelIcon />,
+    route: "/hotels",
+  },
+];
+function HideOnScroll(props) {
+  const { children, window } = props;
+  const trigger = useScrollTrigger({
+    target: window ? window() : undefined,
+  });
+
   return (
-    <AppBar
-      position="static"
-      sx={{
-        backgroundColor: "#022B3A",
-        boxShadow: "none",
-        padding: "0 20px",
-      }}
-    >
-      <Toolbar
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
+    <Slide appear={false} direction="down" in={!trigger}>
+      {children ?? <div />}
+    </Slide>
+  );
+}
+const Navbar = ({ window }) => {
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const navigate = useNavigate();
+
+  const handleDrawerToggle = () => {
+    setMobileOpen((prevState) => !prevState);
+  };
+
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center", p: "20px" }}>
+      <Box
+        sx={{ display: { xs: "flex" }, flexDirection: "column", gap: "10px" }}
       >
-        <Typography
-          variant="h5"
+        <Button variant="text">Login</Button>
+        <Button variant="contained">Signup</Button>
+      </Box>
+      <List>
+        {navItems.map((item, index) => (
+          <ListItem key={index} disablePadding>
+            <ListItemButton onClick={() => navigate(item?.route)}>
+              <ListItemIcon>{item?.icon}</ListItemIcon>
+              <ListItemText primary={item?.text} />{" "}
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
+
+  return (
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <HideOnScroll>
+        <AppBar
+          component="nav"
           sx={{
-            fontWeight: "bold",
-            fontFamily: "El Messiri, sans-serif",
-            letterSpacing: 2,
-            color: "#ffffff",
+            backgroundColor: "transparent",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexDirection: "row",
+            p: "15px 30px",
+            boxShadow: "none",
           }}
         >
-          Hotel Finder
-        </Typography>
-        <Box sx={{ display: "flex", gap: "20px" }}>
-          <Link
-            to="/"
-            style={{
-              color: "#ffffff",
-              textDecoration: "none",
-              fontSize: "16px",
-              fontWeight: "500",
-              transition: "color 0.3s ease",
-            }}
-            onMouseEnter={(e) => (e.target.style.color = "#EDD4D4")}
-            onMouseLeave={(e) => (e.target.style.color = "#ffffff")}
+          <IconButton
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: "none" } }}
           >
-            Home
-          </Link>
-          <Link
-            to="/hotels"
-            style={{
-              color: "#ffffff",
-              textDecoration: "none",
-              fontSize: "16px",
-              fontWeight: "500",
-              transition: "color 0.3s ease",
+            <MenuIcon />
+          </IconButton>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            <Box sx={{ display: "flex" }}>
+              {navItems.map((item, index) => (
+                <Button
+                  variant="text"
+                  startIcon={item?.icon}
+                  onClick={() => navigate(item.route)}
+                  sx={{ p: "10px", fontWeight: "600", fontSize: "14px" }}
+                >
+                  {item?.text}
+                </Button>
+              ))}
+            </Box>
+          </Box>
+          <Box
+            component="img"
+            src={logo}
+            alt="Explore axis Logo"
+            sx={{
+              height: 50,
+              cursor: "pointer",
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
             }}
-            onMouseEnter={(e) => (e.target.style.color = "#EDD4D4")}
-            onMouseLeave={(e) => (e.target.style.color = "#ffffff")}
-          >
-            Hotels
-          </Link>
-        </Box>
-      </Toolbar>
-    </AppBar>
+            onClick={() => {
+              navigate("/");
+            }}
+          />
+          <Box sx={{ display: { sm: "flex", xs: "none" }, gap: "20px" }}>
+            <Button variant="text">Login</Button>
+            <Button
+              variant="contained"
+              sx={{ borderColor: colors.basics.primary }}
+            >
+              Signup
+            </Button>
+          </Box>
+        </AppBar>
+      </HideOnScroll>
+      <nav>
+        <Drawer
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true,
+          }}
+          sx={{
+            display: { xs: "block", sm: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </nav>
+    </Box>
   );
 };
 
