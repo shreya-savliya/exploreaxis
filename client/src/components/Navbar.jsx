@@ -12,6 +12,8 @@ import {
   Toolbar,
   Button,
   ListItemIcon,
+  useScrollTrigger,
+  Slide,
 } from "@mui/material";
 import logo from "../assets/images/logo-transparent.png";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -33,7 +35,18 @@ const navItems = [
     route: "/",
   },
 ];
+function HideOnScroll(props) {
+  const { children, window } = props;
+  const trigger = useScrollTrigger({
+    target: window ? window() : undefined,
+  });
 
+  return (
+    <Slide appear={false} direction="down" in={!trigger}>
+      {children ?? <div />}
+    </Slide>
+  );
+}
 const Navbar = ({ window }) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const navigate = useNavigate();
@@ -69,60 +82,67 @@ const Navbar = ({ window }) => {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar
-        component="nav"
-        sx={{
-          backgroundColor: "transparent",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexDirection: "row",
-          p: "15px 30px",
-          boxShadow: "none",
-        }}
-      >
-        <IconButton
-          aria-label="open drawer"
-          edge="start"
-          onClick={handleDrawerToggle}
-          sx={{ mr: 2, display: { sm: "none" } }}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Box sx={{ display: { xs: "none", sm: "block" } }}>
-          <Box sx={{ display: "flex" }}>
-            {navItems.map((item, index) => (
-              <Button
-                variant="text"
-                startIcon={item?.icon}
-                onClick={() => navigate(item.route)}
-                sx={{ p: "10px", fontWeight: "600", fontSize: "14px" }}
-              >
-                {item?.text}
-              </Button>
-            ))}
-          </Box>
-        </Box>
-        <Box
-          component="img"
-          src={logo}
-          alt="Explore axis Logo"
+      <HideOnScroll>
+        <AppBar
+          component="nav"
           sx={{
-            height: 50,
-            cursor: "pointer",
-            position: "absolute",
-            left: "50%",
-            transform: "translateX(-50%)",
+            backgroundColor: "transparent",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexDirection: "row",
+            p: "15px 30px",
+            boxShadow: "none",
           }}
-          onClick={() => {
-            navigate("/");
-          }}
-        />
-        <Box sx={{ display: { sm: "flex", xs: "none" }, gap: "20px" }}>
-          <Button variant="text">Login</Button>
-          <Button variant="contained">Signup</Button>
-        </Box>
-      </AppBar>
+        >
+          <IconButton
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: "none" } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            <Box sx={{ display: "flex" }}>
+              {navItems.map((item, index) => (
+                <Button
+                  variant="text"
+                  startIcon={item?.icon}
+                  onClick={() => navigate(item.route)}
+                  sx={{ p: "10px", fontWeight: "600", fontSize: "14px" }}
+                >
+                  {item?.text}
+                </Button>
+              ))}
+            </Box>
+          </Box>
+          <Box
+            component="img"
+            src={logo}
+            alt="Explore axis Logo"
+            sx={{
+              height: 50,
+              cursor: "pointer",
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+            onClick={() => {
+              navigate("/");
+            }}
+          />
+          <Box sx={{ display: { sm: "flex", xs: "none" }, gap: "20px" }}>
+            <Button variant="text">Login</Button>
+            <Button
+              variant="contained"
+              sx={{ borderColor: colors.basics.primary }}
+            >
+              Signup
+            </Button>
+          </Box>
+        </AppBar>
+      </HideOnScroll>
       <nav>
         <Drawer
           container={container}

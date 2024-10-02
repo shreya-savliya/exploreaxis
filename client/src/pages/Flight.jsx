@@ -6,13 +6,15 @@ import FlightListing from "../components/FlightListing";
 
 const Flight = () => {
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" sx={{ mt: "80px" }}>
       <Box sx={{ my: "25px" }}>
         <FlightSearch />
       </Box>
       <Box sx={{ display: "flex", margin: "auto", gap: "24px" }}>
-        <FilterSidebar />
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <FilterSidebar />
+        </Box>
+        <Box sx={{ width: "100%" }}>
           <FlightListing />
         </Box>
       </Box>

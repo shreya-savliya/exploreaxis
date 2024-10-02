@@ -4,33 +4,53 @@ import {
   Typography,
   Checkbox,
   Button,
-  Grid,
   Card,
   CardContent,
   Divider,
+  Grid2 as Grid,
 } from "@mui/material";
-
+import homeimg from "../assets/images/hotel-home.png";
+import { colors } from "../styles/colors";
 const FlightCard = ({ flight }) => {
   return (
-    <Card sx={{ borderRadius: 2, boxShadow: 2, maxWidth: "100%", p: 2 }}>
+    <Card sx={{ borderRadius: 2, boxShadow: 2 }}>
       <CardContent>
         <Grid container spacing={2} alignItems="center">
           {/* Airline Logo */}
           <Grid
-            item
-            xs={12}
-            sm={2}
+            size={{ xs: 12, md: 4 }}
             sx={{ textAlign: { xs: "center", sm: "left" } }}
           >
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Emirates_logo.svg/1200px-Emirates_logo.svg.png"
-              alt="Emirates Logo"
-              style={{ maxWidth: "100px" }}
-            />
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Box
+                component="img"
+                src={homeimg}
+                alt="airlines logo image"
+                sx={{
+                  width: "100%",
+                  objectFit: "cover",
+                  maxWidth: "100px",
+                }}
+              />
+              <Typography
+                variant="body1"
+                fontWeight="bold"
+                color={colors.basics.primary}
+                sx={{ display: { xs: "block", md: "none" } }}
+              >
+                starting from ${flight.price}
+              </Typography>
+            </Box>
           </Grid>
 
           {/* Flight Details */}
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Box display="flex" alignItems="center" mb={1}>
               <Box
                 sx={{
@@ -94,17 +114,27 @@ const FlightCard = ({ flight }) => {
 
           {/* Price and View Deals Button */}
           <Grid
-            item
-            xs={12}
-            sm={4}
+            size={{ xs: 12, md: 4 }}
             sx={{ textAlign: { xs: "center", sm: "right" } }}
           >
-            <Typography variant="body1" fontWeight="bold" color="error">
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              color={colors.basics.primary}
+              sx={{ display: { xs: "none", md: "block" } }}
+            >
               starting from ${flight.price}
             </Typography>
             <Button
               variant="contained"
-              sx={{ mt: 2, width: { xs: "100%", sm: "auto" } }}
+              sx={{
+                mt: 2,
+                width: {
+                  xs: "100%",
+                  md: "auto",
+                  borderColor: colors.basics.primary,
+                },
+              }}
             >
               View Deals
             </Button>

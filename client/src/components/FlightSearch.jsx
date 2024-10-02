@@ -16,6 +16,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import SearchIcon from "@mui/icons-material/Search";
+import { colors } from "../styles/colors";
 
 const FlightSearch = () => {
   const [from, setFrom] = useState("");
@@ -131,7 +132,12 @@ const FlightSearch = () => {
             </Select>
           </FormControl>
         </Box>
-        <Button startIcon={<SearchIcon fontSize="large" />}>Search</Button>
+        <Button
+          startIcon={<SearchIcon fontSize="large" />}
+          sx={{ borderColor: colors.basics.primary }}
+        >
+          {/* Search */}
+        </Button>
       </Box>
     </Box>
   );
