@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Flight from "./pages/Flight";
+import Hotels from "./pages/Hotels";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/flights" exact element={<Flight />} />
+            <Route path="/hotels" exact element={<Hotels />} />
           </Routes>
         </Box>
         <Footer />
