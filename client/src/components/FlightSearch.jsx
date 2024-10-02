@@ -14,6 +14,7 @@ import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { SingleInputDateRangeField } from "@mui/x-date-pickers-pro/SingleInputDateRangeField";
 import dayjs from "dayjs";
 import SearchIcon from "@mui/icons-material/Search";
 import { colors } from "../styles/colors";
@@ -34,7 +35,13 @@ const FlightSearch = () => {
   };
 
   return (
-    <Box>
+    <Box
+      sx={{
+        border: `1px solid ${colors.basics.secondary}`,
+        borderRadius: "6px",
+        padding: 2,
+      }}
+    >
       <Box>
         <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
           Where are you flying?
@@ -44,12 +51,23 @@ const FlightSearch = () => {
         sx={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          flexDirection: { xs: "column", md: "row" },
+          justifyContent: "space-between",
+          gap: { xs: "20px", md: 0 },
+          flexWrap: { xs: "none", md: "wrap" },
         }}
       >
         {/* Flying From */}
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <FormControl fullWidth sx={{ maxWidth: "300px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            maxWidth: { xs: "100%", md: "350px" },
+            width: "100%",
+            flexDirection: { xs: "column", md: "row" },
+          }}
+        >
+          <FormControl fullWidth>
             <InputLabel>Flying From</InputLabel>
             <Select
               value={from}
@@ -86,7 +104,7 @@ const FlightSearch = () => {
           </FormControl>
         </Box>
         {/* Trip Type */}
-        <Box sx={{}}>
+        <Box sx={{ width: { xs: "100%", md: "200px" } }}>
           <FormControl fullWidth>
             <InputLabel>Trip</InputLabel>
             <Select
@@ -99,26 +117,17 @@ const FlightSearch = () => {
             </Select>
           </FormControl>
         </Box>
-        {/* Date Range Picker */}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateRangePicker
-            startText="Depart"
-            endText="Return"
-            sx={{}}
-            value={dateRange}
-            onChange={(newValue) => setDateRange(newValue)}
-            renderInput={(startProps, endProps) => (
-              <>
-                <TextField {...startProps} fullWidth />
-                <Box sx={{ mx: 2 }}> to </Box>
-                <TextField {...endProps} fullWidth />
-              </>
-            )}
-          />
-        </LocalizationProvider>
+        <Box sx={{ width: { xs: "100%", md: "200px" } }}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateRangePicker
+              slots={{ field: SingleInputDateRangeField }}
+              name="allowedRange"
+            />
+          </LocalizationProvider>
+        </Box>
 
         {/* Passenger and Class */}
-        <Box sx={{}}>
+        <Box sx={{ width: { xs: "100%", md: "200px" } }}>
           <FormControl fullWidth>
             <InputLabel>Passenger - Class</InputLabel>
             <Select
@@ -134,9 +143,17 @@ const FlightSearch = () => {
         </Box>
         <Button
           startIcon={<SearchIcon fontSize="large" />}
-          sx={{ borderColor: colors.basics.primary }}
+          sx={{
+            borderColor: colors.basics.primary,
+            width: { xs: "100%", md: "auto" },
+          }}
         >
-          {/* Search */}
+          <Typography
+            variant="span"
+            sx={{ display: { xs: "block", md: "none" } }}
+          >
+            Search
+          </Typography>
         </Button>
       </Box>
     </Box>

@@ -18,7 +18,7 @@ const FlightCard = ({ flight }) => {
         <Grid container spacing={2} alignItems="center">
           {/* Airline Logo */}
           <Grid
-            size={{ xs: 12, md: 4 }}
+            size={{ xs: 12, md: 2 }}
             sx={{ textAlign: { xs: "center", sm: "left" } }}
           >
             <Box
@@ -50,7 +50,7 @@ const FlightCard = ({ flight }) => {
           </Grid>
 
           {/* Flight Details */}
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Box display="flex" alignItems="center" mb={1}>
               <Box
                 sx={{
