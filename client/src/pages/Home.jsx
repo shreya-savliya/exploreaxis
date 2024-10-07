@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import homeimg from "../assets/images/HomeImg.png";
 import flightImg from "../assets/images/flight-home.png";
 import hotelImg from "../assets/images/hotel-home.png";
@@ -17,8 +17,12 @@ import FlightSearch from "../components/FlightSearch";
 import SendIcon from "@mui/icons-material/Send";
 import { colors } from "../styles/colors";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FlightDatas } from "../utils/FlightData";
+
 const Home = () => {
   const navigate = useNavigate();
+
   return (
     <Box>
       <Box sx={{ position: "relative", overflow: "hidden" }}>
@@ -86,7 +90,7 @@ const Home = () => {
           </Box>
           <Box mt={3}>
             <Grid container spacing={2}>
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(() => {
+              {FlightDatas.map((data) => {
                 return (
                   <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Card sx={{ maxWidth: 245, p: 1 }}>
@@ -107,13 +111,13 @@ const Home = () => {
                             variant="span"
                             component="div"
                           >
-                            Istanbul, Turkey
+                            {data?.destination}
                           </Typography>
                           <Typography
                             variant="span"
                             sx={{ color: "text.secondary" }}
                           >
-                            YYZ-ISN . $450
+                            {data?.route}. ${data?.price}
                           </Typography>
                         </CardContent>
                       </CardActionArea>

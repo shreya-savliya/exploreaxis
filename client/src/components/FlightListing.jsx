@@ -1,38 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Button, Grid } from "@mui/material";
 import FlightSortTabs from "./FlightSortTabs";
 import FlightCard from "./FlightCard";
-
-// Sample flight data
-const flightData = [
-  {
-    id: 1,
-    price: 99,
-    duration: "2h 18m",
-    airline: "Emirates",
-    rating: 4.2,
-    type: "Cheapest",
-  },
-  {
-    id: 2,
-    price: 150,
-    duration: "1h 50m",
-    airline: "Emirates",
-    rating: 4.5,
-    type: "Quickest",
-  },
-  {
-    id: 3,
-    price: 130,
-    duration: "2h 28m",
-    airline: "Emirates",
-    rating: 4.6,
-    type: "Best",
-  },
-];
+import axios from "axios";
 
 const FlightListing = () => {
   const [sortOption, setSortOption] = useState("Best");
+  const [flightData, setFlightData] = useState([]);
+
+  useEffect(() => {
+    GetAllFlightsData();
+  }, []);
+
+  const GetAllFlightsData = async () => {
+    const response = await axios.get("http://localhost:4000/getflights");
+    setFlightData(response.data);
+  };
 
   const handleSortChange = (newSortOption) => {
     setSortOption(newSortOption);
@@ -40,10 +23,9 @@ const FlightListing = () => {
 
   const sortedFlights = flightData.filter((flight) => {
     if (sortOption === "Cheapest") return flight.type === "Cheapest";
-    if (sortOption === "Quickest") return flight.type === "Quickest";
+    if (sortOption === "Quickest") return flight.stops == "0";
     return flight.type === "Best";
   });
-
   return (
     <Box>
       <FlightSortTabs onSortChange={handleSortChange} />
