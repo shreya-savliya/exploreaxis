@@ -17,7 +17,6 @@ import FlightSearch from "../components/FlightSearch";
 import SendIcon from "@mui/icons-material/Send";
 import { colors } from "../styles/colors";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { FlightDatas } from "../utils/FlightData";
 
 const Home = () => {
