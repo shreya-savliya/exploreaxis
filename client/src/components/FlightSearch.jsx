@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   TextField,
@@ -18,7 +18,10 @@ import { SingleInputDateRangeField } from "@mui/x-date-pickers-pro/SingleInputDa
 import dayjs from "dayjs";
 import SearchIcon from "@mui/icons-material/Search";
 import { colors } from "../styles/colors";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { searchFlightDetailsData } from "../services/FlightDetails";
 
 const FlightSearch = () => {
   const [from, setFrom] = useState("");
@@ -26,9 +29,11 @@ const FlightSearch = () => {
   const [tripType, setTripType] = useState("Return");
   const [dateRange, setDateRange] = useState([dayjs(), dayjs()]);
   const [passengerClass, setPassengerClass] = useState("Economy");
+  const [airportData, setAirportData] = useState([]);
 
-  const locations = ["Lahore", "Karachi", "Islamabad", "Peshawar", "Quetta"]; // example locations
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSwap = () => {
     const temp = from;
@@ -36,6 +41,40 @@ const FlightSearch = () => {
     setTo(temp);
   };
 
+  const handleSearch = async () => {
+    try {
+      const departureDate = dateRange[0].format("YYYY-MM-DD");
+      const returnDate =
+        tripType === "Return" ? dateRange[1].format("YYYY-MM-DD") : null;
+
+      const response = await axios.post("http://localhost:4000/searchflights", {
+        departureAirportCode: from,
+        arrivalAirportCode: to,
+        departureDate,
+        returnDate,
+        passengerClass,
+      });
+      if (response?.data) {
+        dispatch(searchFlightDetailsData([...response?.data]));
+        navigate("/flights");
+      }
+
+      // Process the response data
+    } catch (error) {
+      console.error("Error fetching flights:", error);
+    }
+  };
+
+  useEffect(() => {
+    
+    AirportDetails();
+  }, []);
+
+  const AirportDetails = async () => {
+    const airport = await axios.get("http://localhost:4000/airport");
+    setAirportData([...airport?.data?.airports]);
+  };
+  
   return (
     <Box
       sx={{
@@ -78,9 +117,9 @@ const FlightSearch = () => {
               onChange={(e) => setFrom(e.target.value)}
               label="Flying From"
             >
-              {locations.map((location) => (
-                <MenuItem key={location} value={location}>
-                  {location}
+              {airportData?.map((location) => (
+                <MenuItem key={location?._id} value={location?.airport_code}>
+                  {location?.city} ({location?.airport_code})
                 </MenuItem>
               ))}
             </Select>
@@ -99,14 +138,15 @@ const FlightSearch = () => {
               onChange={(e) => setTo(e.target.value)}
               label="Flying To"
             >
-              {locations.map((location) => (
-                <MenuItem key={location} value={location}>
-                  {location}
+              {airportData.map((location) => (
+                <MenuItem key={location?._id} value={location?.airport_code}>
+                  {location?.city} ({location?.airport_code})
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Box>
+
         {/* Trip Type */}
         <Box sx={{ width: { xs: "100%", md: "200px" } }}>
           <FormControl fullWidth>
@@ -121,9 +161,13 @@ const FlightSearch = () => {
             </Select>
           </FormControl>
         </Box>
+
+        {/* Date Range Picker */}
         <Box sx={{ width: { xs: "100%", md: "200px" } }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateRangePicker
+              value={dateRange}
+              onChange={(newValue) => setDateRange(newValue)}
               slots={{ field: SingleInputDateRangeField }}
               name="allowedRange"
             />
@@ -145,12 +189,15 @@ const FlightSearch = () => {
             </Select>
           </FormControl>
         </Box>
+
+        {/* Search Button */}
         <Button
           startIcon={<SearchIcon fontSize="large" />}
           sx={{
             borderColor: colors.basics.primary,
             width: { xs: "100%", md: "auto" },
           }}
+          onClick={handleSearch}
         >
           <Typography
             variant="span"

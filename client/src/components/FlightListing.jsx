@@ -3,18 +3,24 @@ import { Box, Typography, Button, Grid } from "@mui/material";
 import FlightSortTabs from "./FlightSortTabs";
 import FlightCard from "./FlightCard";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const FlightListing = () => {
   const [sortOption, setSortOption] = useState("Best");
   const [flightData, setFlightData] = useState([]);
+  const searchFlight = useSelector((state) => state?.searchFlights?.flights);
 
   useEffect(() => {
     GetAllFlightsData();
   }, []);
 
+  useEffect(() => {
+    setFlightData(searchFlight);
+  }, [searchFlight]);
+
   const GetAllFlightsData = async () => {
-    const response = await axios.get("http://localhost:4000/getflights");
-    setFlightData(response.data);
+    // const response = await axios.get("http://localhost:4000/getflights");
+    setFlightData(searchFlight);
   };
 
   const handleSortChange = (newSortOption) => {
@@ -31,7 +37,7 @@ const FlightListing = () => {
       <FlightSortTabs onSortChange={handleSortChange} />
 
       <Grid container spacing={2} mt={2}>
-        {sortedFlights.map((flight) => (
+        {flightData.map((flight) => (
           <Grid item xs={12} key={flight.id}>
             <FlightCard flight={flight} />
           </Grid>
