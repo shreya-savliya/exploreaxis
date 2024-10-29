@@ -17,6 +17,8 @@ const hotelSchema = new mongoose.Schema({
     country: String,
   },
   roomId: [{ type: String, ref: "Room" }],
+  latitude: { type: Number },
+  longitude: { type: Number },
 });
 
 const HotelModel = mongoose.model("Hotel", hotelSchema);
