@@ -81,10 +81,10 @@ const FlightCard = ({ flight }) => {
               <Box>
                 <Typography variant="body2">12:00 pm - 01:28 pm</Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Emirates, non stop
+                  {flight.airline_name}, {flight?.layover?.length == 0 ? 'non stop' : `${flight?.layover?.length} stop`} 
                 </Typography>
               </Box>
-              <Typography variant="body2">2h 28m</Typography>
+              <Typography variant="body2">{flight?.total_travel_time}</Typography>
               <Typography variant="body2" color="textSecondary">
                 EWR-BNA
               </Typography>
@@ -100,10 +100,10 @@ const FlightCard = ({ flight }) => {
               <Box>
                 <Typography variant="body2">12:00 pm - 01:28 pm</Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Emirates, non stop
+                {flight.airline_name}, {flight?.layover?.length == 0 ? 'non stop' : `${flight?.layover?.length} stop`} 
                 </Typography>
               </Box>
-              <Typography variant="body2">2h 28m</Typography>
+              <Typography variant="body2">{flight?.total_travel_time}</Typography>
               <Typography variant="body2" color="textSecondary">
                 EWR-BNA
               </Typography>
