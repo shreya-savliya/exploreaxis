@@ -7,6 +7,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Flight from "./pages/Flight";
 import Hotels from "./pages/Hotels";
+import HotelDetails from "./pages/HotelDetails";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
             <Route path="/" exact element={<Home />} />
             <Route path="/flights" exact element={<Flight />} />
             <Route path="/hotels" exact element={<Hotels />} />
+            <Route path="/hotels/:id" element={<HotelDetails />} />
           </Routes>
         </Box>
         <Footer />
