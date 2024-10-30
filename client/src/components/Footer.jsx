@@ -132,7 +132,6 @@ const Footer = () => {
                 <ListItemText
                   primary="299 Doon Valley Dr, Kitchener, ON N2G 4M4"
                   sx={{ color: colors.basics.secondary }}
-                  F
                 />
               </ListItem>
               <ListItem disablePadding>
