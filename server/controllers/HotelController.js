@@ -1,4 +1,5 @@
 import Hotel from "../models/HotelModel.js";
+import RoomModel from "../models/RoomModel.js";
 
 const getHotels = async (req, res) => {
   try {
@@ -30,4 +31,20 @@ const getHotelById = async (req, res) => {
   }
 };
 
-export { getHotels, getHotelById };
+const getRoomById = async (req, res) => {
+  try {
+    const { roomId } = req.body;
+
+    const room = await RoomModel.findOne({ room_id: roomId });
+
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    res.status(200).json(room);
+  } catch (err) {
+    res.status(500).json({ message: "Server Error", error: err.message });
+  }
+};
+
+export { getHotels, getHotelById, getRoomById };
