@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import homeimg from "../assets/images/HomeImg.png";
 import flightImg from "../assets/images/flight-home.png";
 import hotelImg from "../assets/images/hotel-home.png";
@@ -10,7 +10,7 @@ import {
   CardContent,
   CardMedia,
   Container,
-  Grid2 as Grid,
+  Grid,
   Typography,
 } from "@mui/material";
 import FlightSearch from "../components/FlightSearch";
@@ -18,6 +18,8 @@ import SendIcon from "@mui/icons-material/Send";
 import { colors } from "../styles/colors";
 import { useNavigate } from "react-router-dom";
 import { FlightDatas } from "../utils/FlightData";
+import ReviewCard from "../components/ReviewCard";
+import { reviews } from "../utils/ReviewData";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -89,55 +91,47 @@ const Home = () => {
           </Box>
           <Box mt={3}>
             <Grid container spacing={2}>
-              {FlightDatas.map((data) => {
-                return (
-                  <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                    <Card sx={{ maxWidth: 245, p: 1 }}>
-                      <CardActionArea sx={{ display: "flex" }}>
-                        <CardMedia
-                          component="img"
-                          sx={{
-                            height: "50px",
-                            width: "50px",
-                            borderRadius: "6px",
-                          }}
-                          image={hotelImg}
-                          alt="green iguana"
-                        />
-                        <CardContent>
-                          <Typography
-                            gutterBottom
-                            variant="span"
-                            component="div"
-                          >
-                            {data?.destination}
-                          </Typography>
-                          <Typography
-                            variant="span"
-                            sx={{ color: "text.secondary" }}
-                          >
-                            {data?.route}. ${data?.price}
-                          </Typography>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                  </Grid>
-                );
-              })}{" "}
+              {FlightDatas.map((data) => (
+                <Grid item xs={12} sm={6} md={3} key={data.id}>
+                  <Card sx={{ maxWidth: 245, p: 1 }}>
+                    <CardActionArea sx={{ display: "flex" }}>
+                      <CardMedia
+                        component="img"
+                        sx={{
+                          height: "50px",
+                          width: "50px",
+                          borderRadius: "6px",
+                        }}
+                        image={hotelImg}
+                        alt="hotel image"
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="span" component="div">
+                          {data.destination}
+                        </Typography>
+                        <Typography variant="span" sx={{ color: "text.secondary" }}>
+                          {data.route}. ${data.price}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Grid>
+              ))}
             </Grid>
           </Box>
         </Box>
         <Box
           sx={{
             display: "flex",
-            height: { xs: "100%", sm: "559px", gap: "20px" },
+            height: { xs: "100%", sm: "559px" },
+            gap: "20px",
           }}
         >
           <Box sx={{ position: "relative" }}>
             <Box
               component="img"
               src={flightImg}
-              alt="Home Page image which describe the website overview"
+              alt="Flight image"
               sx={{
                 width: "100%",
                 height: { xs: "400px", sm: "100%" },
@@ -193,7 +187,7 @@ const Home = () => {
             <Box
               component="img"
               src={hotelImg}
-              alt="Home Page image which describe the website overview"
+              alt="Hotel image"
               sx={{
                 width: "100%",
                 height: { xs: "400px", sm: "100%" },
@@ -223,20 +217,17 @@ const Home = () => {
                     textAlign: "center",
                   }}
                 >
-                  Show Flights
+                  Show Hotels
                 </Typography>
                 <Typography
                   sx={{
-                    fontSize: {
-                      xs: "14px",
-                      md: "16px",
-                    },
+                    fontSize: { xs: "14px", md: "16px" },
                     color: colors.basics.white,
                     textAlign: "center",
                     my: "16px",
                   }}
                 >
-                  Search Flights & Places Hire to our most popular destinations
+                  Discover amazing hotels at popular destinations
                 </Typography>
               </Box>
               <Button
@@ -244,10 +235,31 @@ const Home = () => {
                 variant="contained"
                 sx={{ borderColor: colors.basics.primary }}
               >
-                Show Flights
+                Show Hotels
               </Button>
             </Box>
           </Box>
+        </Box>
+
+        {/* Customer Reviews Section */}
+        <Box sx={{ mt: "50px", mb: "80px" }}>
+          <Typography
+            sx={{
+              fontSize: { xs: "24px", md: "32px" },
+              fontWeight: 600,
+              mb: 2,
+              textAlign: "center",
+            }}
+          >
+            Customer Reviews
+          </Typography>
+          <Grid container spacing={2}>
+            {reviews.map((review) => (
+              <Grid item xs={12} sm={6} md={4} key={review.id}>
+                <ReviewCard review={review} />
+              </Grid>
+            ))}
+          </Grid>
         </Box>
       </Container>
     </Box>

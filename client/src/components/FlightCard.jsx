@@ -1,19 +1,9 @@
 import React from "react";
-import {
-  Box,
-  Typography,
-  Checkbox,
-  Button,
-  Card,
-  CardContent,
-  Divider,
-  Grid2 as Grid,
-} from "@mui/material";
-import homeimg from "../assets/images/hotel-home.png";
-import { colors } from "../styles/colors";
-const FlightCard = ({ flight }) => {
+import { Card, CardContent, Typography, Button } from "@mui/material";
+
+const FlightCard = ({ flight, onViewDetails }) => {
   return (
-    <Card sx={{ borderRadius: 2, boxShadow: 2 }}>
+    <Card>
       <CardContent>
         <Grid container spacing={2} alignItems="center">
           {/* Airline Logo */}

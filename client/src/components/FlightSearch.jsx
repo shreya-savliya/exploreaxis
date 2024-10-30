@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  TextField,
   MenuItem,
   IconButton,
   Select,
@@ -79,7 +78,7 @@ const FlightSearch = () => {
     <Box
       sx={{
         ...(location.pathname !== "/" && {
-          border: `1px solid ${colors.basics.secondary}`,
+          border: `1px solid ${colors?.basics?.secondary || "#ccc"}`,
           borderRadius: "6px",
           padding: 2,
         }),
@@ -169,7 +168,6 @@ const FlightSearch = () => {
               value={dateRange}
               onChange={(newValue) => setDateRange(newValue)}
               slots={{ field: SingleInputDateRangeField }}
-              name="allowedRange"
             />
           </LocalizationProvider>
         </Box>
@@ -192,17 +190,15 @@ const FlightSearch = () => {
 
         {/* Search Button */}
         <Button
-          startIcon={<SearchIcon fontSize="large" />}
+          variant="contained"
+          startIcon={<SearchIcon />}
           sx={{
-            borderColor: colors.basics.primary,
+            backgroundColor: colors?.basics?.primary || "#1976d2",
             width: { xs: "100%", md: "auto" },
           }}
           onClick={handleSearch}
         >
-          <Typography
-            variant="span"
-            sx={{ display: { xs: "block", md: "none" } }}
-          >
+          <Typography variant="button" sx={{ display: { xs: "block", md: "inline" } }}>
             Search
           </Typography>
         </Button>
@@ -212,3 +208,5 @@ const FlightSearch = () => {
 };
 
 export default FlightSearch;
+
+
