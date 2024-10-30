@@ -29,16 +29,26 @@ const FilterSidebar = () => {
 
   useEffect(() => {
     setFlightData([...searchFlightData]);
-    const stopsArray = searchFlightData?.map((flight) => {
-      console.log(flight,"flights")
-      const layovers = flight?.layover?.length;
-      return layovers === 0
-        ? "Non-stop"
-        : `${layovers} Stop${layovers > 1 ? "s" : ""}`;
-    });
+
+    // Get unique stops
+    const stopsArray = [
+      ...new Set(
+        searchFlightData?.map((flight) => {
+          console.log(flight, "flights");
+          const layovers = flight?.layover?.length;
+          return layovers === 0
+            ? "Non-stop"
+            : `${layovers} Stop${layovers > 1 ? "s" : ""}`;
+        })
+      ),
+    ];
+
+    // Get unique airlines
     const airlinesArray = [
       ...new Set(searchFlightData?.map((flight) => flight.airline_name)),
     ];
+
+    // Get price range
     const prices = searchFlightData?.flatMap((flight) =>
       flight.travel_classes?.map((travelClass) => travelClass.price)
     );
@@ -46,13 +56,15 @@ const FilterSidebar = () => {
       min: Math.min(...prices),
       max: Math.max(...prices),
     };
-    console.log(priceRange,"priceRange")
+    console.log(priceRange, "priceRange");
+
     // Set state
     setStops(stopsArray);
     setAirlines(airlinesArray);
     setPrice(priceRange);
     setSelectedPrice([priceRange.min, priceRange.max]);
   }, [searchFlightData]);
+
 
   // Handle changes for price range
   const handlePriceChange = (event, newValue) => {

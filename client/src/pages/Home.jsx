@@ -48,7 +48,6 @@ const Home = () => {
             borderRadius: "16px",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
             padding: "16px",
-            zIndex: 9999,
           }}
         >
           <FlightSearch />
@@ -110,7 +109,7 @@ const Home = () => {
                           {data.destination}
                         </Typography>
                         <Typography variant="span" sx={{ color: "text.secondary" }}>
-                          {data.route}. ${data.price}
+                          {data.route}. {data.price}
                         </Typography>
                       </CardContent>
                     </CardActionArea>

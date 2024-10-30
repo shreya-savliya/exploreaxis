@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import homeimg from "../assets/images/hotel-home.png";
 import { colors } from "../styles/colors";
-import EmailItineraryDialog from "./EmailItineraryDialog";
+import EmailItineraryDialog from "./EmailItineraryDialog.jsx";
 import EmailIcon from "@mui/icons-material/Email";
 
 const FlightCard = ({ flight, onViewDetails }) => {
@@ -76,14 +76,14 @@ const FlightCard = ({ flight, onViewDetails }) => {
                   }}
                 >
                   <Typography variant="body2" color="textPrimary">
-                    4.2
+                    {flight?.rating}
                   </Typography>
                 </Box>
                 <Typography variant="body1" ml={1} fontWeight="bold">
-                  Very Good
+                  {flight?.rating_type}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" ml={0.5}>
-                  54 reviews
+                  {flight?.review_count} reviews
                 </Typography>
               </Box>
 
@@ -93,45 +93,145 @@ const FlightCard = ({ flight, onViewDetails }) => {
                 alignItems="center"
               >
                 <Box>
-                  <Typography variant="body2">12:00 pm - 01:28 pm</Typography>
+                  {/* Display Departure and Arrival Time for Outbound Flight */}
+                  <Typography variant="body2" fontWeight={600} fontSize={16}>
+                    {new Date(flight.departure_time).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}{" "}
+                    -{" "}
+                    {new Date(
+                      flight.segments[0].destination_time
+                    ).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                    {/* Calculate Days Difference */}
+                    {(() => {
+                      const departureDate = new Date(flight.departure_time);
+                      const arrivalDate = new Date(
+                        flight.segments[0].destination_time
+                      );
+                      const dayDifference =
+                        arrivalDate.getDate() - departureDate.getDate();
+
+                      if (dayDifference === 1) {
+                        return (
+                          <span style={{ color: "red", fontSize: "0.8em" }}>
+                            {" "}
+                            +1
+                          </span>
+                        );
+                      } else if (dayDifference === 2) {
+                        return (
+                          <span style={{ color: "red", fontSize: "0.8em" }}>
+                            {" "}
+                            +2
+                          </span>
+                        );
+                      }
+                      return null;
+                    })()}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    fontSize={12}
+                  >
+                    {flight.departureAirport.city} (
+                    {flight.departure_airport_code}) -{" "}
+                    {flight.destinationAirport.city} (
+                    {flight.destination_airport_code})
+                  </Typography>
                   <Typography variant="body2" color="textSecondary">
-                    {flight.airline_name},{" "}
-                    {flight?.layover?.length == 0
-                      ? "non stop"
-                      : `${flight?.layover?.length} stop`}
+                    {flight.airline_name}
                   </Typography>
                 </Box>
                 <Typography variant="body2">
-                  {flight?.total_travel_time}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  EWR-BNA
+                  {flight.total_travel_time} (
+                  {flight.layover.length === 0
+                    ? "Non-stop"
+                    : `${flight.layover.length} stop${
+                        flight.layover.length > 1 ? "s" : ""
+                      }`}
+                  )
                 </Typography>
               </Box>
 
-              <Divider sx={{ my: 1 }} />
+              {flight.trip_type === "Round-trip" && (
+                <>
+                  <Divider sx={{ my: 1 }} />
 
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Box>
-                  <Typography variant="body2">12:00 pm - 01:28 pm</Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    {flight.airline_name},{" "}
-                    {flight?.layover?.length == 0
-                      ? "non stop"
-                      : `${flight?.layover?.length} stop`}
-                  </Typography>
-                </Box>
-                <Typography variant="body2">
-                  {flight?.total_travel_time}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  EWR-BNA
-                </Typography>
-              </Box>
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Box>
+                      {/* Display Departure and Arrival Time for Return Flight */}
+                      <Typography variant="body2">
+                        {new Date(
+                          flight.segments[1].departure_time
+                        ).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}{" "}
+                        -{" "}
+                        {new Date(flight.destination_time).toLocaleTimeString(
+                          [],
+                          { hour: "2-digit", minute: "2-digit" }
+                        )}
+                        {/* Calculate Days Difference */}
+                        {(() => {
+                          const returnDepartureDate = new Date(
+                            flight.segments[1].departure_time
+                          );
+                          const returnArrivalDate = new Date(
+                            flight.destination_time
+                          );
+                          const returnDayDifference =
+                            returnArrivalDate.getDate() -
+                            returnDepartureDate.getDate();
+
+                          if (returnDayDifference === 1) {
+                            return (
+                              <span style={{ color: "red", fontSize: "0.8em" }}>
+                                {" "}
+                                +1
+                              </span>
+                            );
+                          } else if (returnDayDifference === 2) {
+                            return (
+                              <span style={{ color: "red", fontSize: "0.8em" }}>
+                                {" "}
+                                +2
+                              </span>
+                            );
+                          }
+                          return null;
+                        })()}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {flight.destinationAirport.city} (
+                        {flight.destination_airport_code}) -{" "}
+                        {flight.departureAirport.city} (
+                        {flight.departure_airport_code})
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {flight.airline_name}
+                      </Typography>
+                    </Box>
+                    <Typography variant="body2">
+                      {flight.total_travel_time}{" "}
+                      {flight.layover.length === 0
+                        ? "Non-stop"
+                        : `${flight.layover.length} stop${
+                            flight.layover.length > 1 ? "s" : ""
+                          }`}
+                    </Typography>
+                  </Box>
+                </>
+              )}
             </Grid>
 
             {/* Price and View Deals Button */}
@@ -185,7 +285,7 @@ const FlightCard = ({ flight, onViewDetails }) => {
           </Grid>
         </CardContent>
       </Card>
-      <EmailItineraryDialog open={open} handleClose={HandleClose}/>
+      <EmailItineraryDialog open={open} handleClose={HandleClose} />
     </>
   );
 };

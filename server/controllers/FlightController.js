@@ -21,7 +21,46 @@ class FlightController {
         return res.status(404).json({ message: "Flight not found" });
       }
 
-      res.status(200).json(flight);
+      // Fetch airline details
+      const airline = await AirlineModel.findOne({
+        code: flight.airline_code,
+      });
+      const airlineName = airline ? airline.name : null;
+
+      // Fetch departure and destination airport details
+      const departureAirport = await AirportModel.findOne({
+        airport_code: flight.departure_airport_code,
+      });
+      const destinationAirport = await AirportModel.findOne({
+        airport_code: flight.destination_airport_code,
+      });
+      const rating = (Math.random() * (5 - 3) + 3).toFixed(1); // Rating between 3.0 and 5.0
+      const reviewCount = Math.floor(Math.random() * 500) + 1; // Review count between 1 and 500
+      const ratingTypes = ["Very Good", "Good", "Average", "Poor"];
+      const ratingType =
+        ratingTypes[
+          rating >= 4.5 ? 0 : rating >= 4 ? 1 : rating >= 3.5 ? 2 : 3
+        ];
+      const enrichedFlight = {
+        ...flight.toObject(),
+        airline_name: airlineName,
+        price: flight?.travel_classes[0]?.price,
+        departureAirport: {
+          city: departureAirport ? departureAirport.city : null,
+          airport_name: departureAirport ? departureAirport.airport_name : null,
+        },
+        destinationAirport: {
+          city: destinationAirport ? destinationAirport.city : null,
+          airport_name: destinationAirport
+            ? destinationAirport.airport_name
+            : null,
+        },
+        rating,
+        review_count: reviewCount,
+        rating_type: ratingType,
+      };
+
+      res.status(200).json(enrichedFlight);
     } catch (error) {
       res.status(500).json({ message: "Error fetching flight data", error });
     }
@@ -83,21 +122,36 @@ class FlightController {
           const destinationAirport = await AirportModel.findOne({
             airport_code: flight.destination_airport_code,
           });
+          const rating = (Math.random() * (5 - 3) + 3).toFixed(1); // Rating between 3.0 and 5.0
+          const reviewCount = Math.floor(Math.random() * 500) + 1; // Review count between 1 and 500
+          const ratingTypes = ["Very Good", "Good", "Average", "Poor"];
+          const ratingType =
+            ratingTypes[
+              rating >= 4.5 ? 0 : rating >= 4 ? 1 : rating >= 3.5 ? 2 : 3
+            ];
           return {
             ...flight.toObject(),
             airline_name: airlineName,
+            price: flight?.travel_classes[0]?.price,
             departureAirport: {
               city: departureAirport ? departureAirport.city : null,
-              airport_name: departureAirport ? departureAirport.airport_name: null,
+              airport_name: departureAirport
+                ? departureAirport.airport_name
+                : null,
             },
             destinationAirport: {
               city: destinationAirport ? destinationAirport.city : null,
-              airport_name: destinationAirport ? destinationAirport.airport_name: null,
+              airport_name: destinationAirport
+                ? destinationAirport.airport_name
+                : null,
             },
+            rating,
+            review_count: reviewCount,
+            rating_type: ratingType,
           };
         })
       );
-      console.log(enrichedFlights,"enrichedFlights")
+      console.log(enrichedFlights, "enrichedFlights");
       res.status(200).json(enrichedFlights);
     } catch (error) {
       res.status(500).json({ message: "Error searching flights", error });

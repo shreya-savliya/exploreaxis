@@ -1,81 +1,178 @@
-// FlightDetailPage.jsx
-import React from "react";
-import "./FlightDetailPage.css";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import {
+  Box,
+  Typography,
+  Grid,
+  Button,
+  Card,
+  CardMedia,
+  CardContent,
+  Avatar,
+  Divider,
+  Chip,
+  Container,
+} from "@mui/material";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import WifiIcon from "@mui/icons-material/Wifi";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import homeImg from "../assets/images/HomeImg.png";
+import hotelImg from "../assets/images/hotel-home.png";
+import { colors } from "../styles/colors";
 
-function FlightDetailPage() {
+const FlightDetails = () => {
+  const { flightId } = useParams(); // Fetch flightId from route params
+  const [flightData, setFlightData] = useState(null);
+
+  useEffect(() => {
+    // Fetch flight data from API
+    const fetchFlightDetails = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/getflights/${flightId}`);
+        setFlightData(response.data);
+      } catch (error) {
+        console.error("Error fetching flight details:", error);
+      }
+    };
+
+    if (flightId) fetchFlightDetails();
+  }, [flightId]);
+
+  if (!flightData) {
+    return <Typography>Loading...</Typography>;
+  }
+
   return (
-    <div className="flight-detail-page">
-      {/* Back to Flights Button */}
-      <div className="back-button">
-        <a href="/">Back to Flights</a>
-      </div>
+    <Container maxWidth="xl" sx={{ mt: "80px" }}>
+      {/* Flight Title */}
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography variant="h5">{flightData?.airline_name} A380 Airbus</Typography>
+        <Typography variant="h6" color="primary">
+          ${flightData?.price}
+        </Typography>
+      </Box>
 
-      {/* Flight Title and Price */}
-      <div className="flight-header">
-        <h2>Emirates A380 Airbus</h2>
-        <div className="flight-price">$240</div>
-      </div>
+      {/* Location and Reviews */}
+      <Typography variant="body2" color="textSecondary">
+        {flightData?.departureAirport?.city}, {flightData?.departureAirport?.airport_name}
+      </Typography>
+      <Typography variant="body2" color="textSecondary">
+        {flightData?.rating} <span> {flightData?.rating_type} {flightData?.review_count} reviews</span>
+      </Typography>
 
-      {/* Flight Image */}
-      <div className="flight-image">
-        <img src="flight-image.jpg" alt="Emirates A380 Airbus" />
-      </div>
+      {/* Image */}
+      <CardMedia
+        component="img"
+        height="200"
+        image={homeImg}
+        alt={flightData?.airline_name}
+        sx={{ borderRadius: 2, my: 2 }}
+      />
 
-      {/* Flight Features */}
-      <div className="features-section">
-        <h3>Basic Economy Features</h3>
-        <div className="features-list">
-          <div className="feature-item">Economy</div>
-          <div className="feature-item">One Carry-On</div>
-          <div className="feature-item">In-Flight Entertainment</div>
-          <div className="feature-item">Free WiFi</div>
-          {/* Add other features as needed */}
-        </div>
-      </div>
+      {/* Economy Features */}
+      <Box display="flex" alignItems="center" gap={2}>
+        <Typography variant="h6">Basic Economy Features</Typography>
+        <Chip label="Economy" color="primary" />
+        <Chip label="First Class" />
+        <Chip label="Business Class" />
+      </Box>
+      <Box display="flex" gap={1} mt={1}>
+        {/* Replace with images */}
+        {Array.from({ length: 5 }).map((_, index) => (
+          <Avatar
+            key={index}
+            variant="rounded"
+            src={hotelImg}
+            sx={{ width: 50, height: 50 }}
+          />
+        ))}
+      </Box>
 
-      {/* Airline Policies */}
-      <div className="policies-section">
-        <h3>Emirates Airlines Policies</h3>
-        <ul>
-          <li>Free flight change, inclusive of select COVID filters.</li>
-          <li>Free flight health screening for passengers.</li>
-        </ul>
-      </div>
+      {/* Policies */}
+      <Box mt={2} p={2} bgcolor="primary.light" borderRadius={2}>
+        <Typography variant="h6">{flightData?.airline_name} Airlines Policies</Typography>
+        <Typography variant="body2">
+          <ul>
+            <li>Pre-flight cleaning, installation of cabin HEPA filters.</li>
+            <li>Pre-flight health screening questions.</li>
+          </ul>
+        </Typography>
+      </Box>
 
-      {/* Flight Schedule */}
-      <div className="flight-schedule">
-        <h3>Return Wed, Dec 8</h3>
-        <div className="flight-details">
-          <div className="time">
-            <span>12:00 pm</span> <i className="fas fa-plane"></i>{" "}
-            <span>3:30 pm</span>
-          </div>
-          <div className="duration">2h 23m</div>
-          <div className="actions">
-            <button className="action-button">
-              <i className="fas fa-heart"></i>
-            </button>
-            <button className="action-button">
-              <i className="fas fa-share"></i>
-            </button>
-            <button className="action-button">
-              <i className="fas fa-thumbs-up"></i>
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* Flight Details */}
+      <Box mt={3}>
+        {flightData?.segments.map((segment, index) => (
+          <Card key={segment._id} sx={{ mb: 2 }}>
+            <CardContent>
+              <Grid container spacing={2} alignItems="center">
+                {/* Airline Info */}
+                <Grid item xs={2}>
+                  <Avatar
+                    variant="rounded"
+                    src={hotelImg}
+                    sx={{ width: 50, height: 50 }}
+                  />
+                </Grid>
+                <Grid item xs={10}>
+                  <Typography variant="h6">{flightData?.airline_name}</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {segment?.airline_code} {segment?.travel_class}
+                  </Typography>
+                </Grid>
 
-      {/* Newsletter Section */}
-      <div className="newsletter-section">
-        <h4>Subscribe to Newsletter</h4>
-        <p>Get travel updates, discounts, and tips right to your inbox.</p>
-        <form className="newsletter-form">
-          <input type="email" placeholder="Your email address" required />
-          <button type="submit">Subscribe</button>
-        </form>
-      </div>
-    </div>
+                {/* Flight Timings */}
+                <Grid item xs={3}>
+                  <Typography variant="body2" color="textSecondary">
+                    {new Date(segment?.departure_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </Typography>
+                  <Typography variant="caption">{segment?.departure_airport_code}</Typography>
+                </Grid>
+                <Grid item xs={1} textAlign="center">
+                  <ArrowForwardIcon />
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2" color="textSecondary">
+                    {segment?.travel_time}
+                  </Typography>
+                </Grid>
+                <Grid item xs={1} textAlign="center">
+                  <ArrowForwardIcon />
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2" color="textSecondary">
+                    {new Date(segment?.destination_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </Typography>
+                  <Typography variant="caption">{segment?.destination_airport_code}</Typography>
+                </Grid>
+
+                {/* Amenities */}
+                <Grid item xs={12} mt={1}>
+                  <Box display="flex" gap={2}>
+                    {flightData?.facilities?.includes("wifi") && <WifiIcon fontSize="small" />}
+                    {flightData?.facilities?.includes("in-flight entertainment") && <RestaurantIcon fontSize="small" />}
+                    <AccessTimeIcon fontSize="small" />
+                    <AttachMoneyIcon fontSize="small" />
+                  </Box>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        ))}
+      </Box>
+
+      {/* Book Button */}
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{ borderColor: colors.basics.primary }}
+      >
+        Book now
+      </Button>
+    </Container>
   );
-}
+};
 
-export default FlightDetailPage;
+export default FlightDetails;
