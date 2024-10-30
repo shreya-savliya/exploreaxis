@@ -27,7 +27,7 @@ const Hotels = () => {
   useEffect(() => {
     const fetchHotels = async () => {
       try {
-        const response = await fetch("http://localhost:8000/gethotels");
+        const response = await fetch("http://localhost:4000/gethotels");
         const data = await response.json();
         console.log("Fetched hotels:", data);
         setHotels(data);
