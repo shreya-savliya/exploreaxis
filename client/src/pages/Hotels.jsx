@@ -12,22 +12,26 @@ import {
   FormGroup,
   FormControlLabel,
   FormLabel,
-  Slider,
-  Rating,
   Container,
 } from "@mui/material";
 import { FavoriteBorder, Favorite } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const Hotels = () => {
   const [hotels, setHotels] = useState([]);
+  const [filteredHotels, setFilteredHotels] = useState([]);
+  const [selectedDestinations, setSelectedDestinations] = useState([]);
 
-  // Fetch data from the API when the component mounts
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchHotels = async () => {
       try {
         const response = await fetch("http://localhost:4000/gethotels");
         const data = await response.json();
-        setHotels(data); // Assuming the data comes in the correct format
+        console.log("Fetched hotels:", data);
+        setHotels(data);
+        setFilteredHotels(data);
       } catch (error) {
         console.error("Error fetching hotel data:", error);
       }
@@ -36,11 +40,36 @@ const Hotels = () => {
     fetchHotels();
   }, []);
 
+  const handleDestinationChange = (event) => {
+    const destination = event.target.value;
+    setSelectedDestinations((prevDestinations) =>
+      event.target.checked
+        ? [...prevDestinations, destination]
+        : prevDestinations.filter((dest) => dest !== destination)
+    );
+  };
+
+  useEffect(() => {
+    const applyFilters = () => {
+      let filtered = hotels;
+
+      // Filter by destinations
+      if (selectedDestinations.length > 0) {
+        filtered = filtered.filter((hotel) =>
+          selectedDestinations.includes(hotel.address?.city || "")
+        );
+      }
+
+      setFilteredHotels(filtered);
+    };
+
+    applyFilters();
+  }, [hotels, selectedDestinations]);
+
   return (
     <Container maxWidth="xl">
       <Box sx={{ m: "50px 0 80px" }}>
         <Grid container spacing={2}>
-          {/* Filter Section */}
           <Grid item xs={12} md={3}>
             <Box p={2}>
               <Typography variant="h6" gutterBottom>
@@ -48,43 +77,72 @@ const Hotels = () => {
               </Typography>
               <FormGroup>
                 <FormLabel>Destinations</FormLabel>
-                <FormControlLabel control={<Checkbox />} label="Florida" />
-                <FormControlLabel control={<Checkbox />} label="Miami" />
-                <FormLabel>Price Range</FormLabel>
-                <Slider defaultValue={50} aria-label="Price Range" />
-                <FormLabel>Star Rating</FormLabel>
                 <FormControlLabel
-                  control={<Checkbox />}
-                  label={<Rating value={5} readOnly />}
+                  control={
+                    <Checkbox
+                      value="Miami"
+                      onChange={handleDestinationChange}
+                    />
+                  }
+                  label="Miami"
                 />
                 <FormControlLabel
-                  control={<Checkbox />}
-                  label={<Rating value={4} readOnly />}
+                  control={
+                    <Checkbox
+                      value="Florida"
+                      onChange={handleDestinationChange}
+                    />
+                  }
+                  label="Florida"
                 />
                 <FormControlLabel
-                  control={<Checkbox />}
-                  label={<Rating value={3} readOnly />}
+                  control={
+                    <Checkbox
+                      value="New York"
+                      onChange={handleDestinationChange}
+                    />
+                  }
+                  label="New York"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      value="Aspen"
+                      onChange={handleDestinationChange}
+                    />
+                  }
+                  label="Aspen"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      value="London"
+                      onChange={handleDestinationChange}
+                    />
+                  }
+                  label="London"
                 />
               </FormGroup>
             </Box>
           </Grid>
 
-          {/* Hotel Listings Section */}
           <Grid item xs={12} md={9}>
-            <Box>
-              <Typography variant="h6" gutterBottom>
-                Sort by: Popularity
-              </Typography>
-
-              {hotels.length > 0 ? (
-                hotels.map((hotel) => (
+            <Box sx={{ mt: 4 }}>
+              {filteredHotels.length > 0 ? (
+                filteredHotels.map((hotel) => (
                   <Card key={hotel.hotel_id} sx={{ mb: 4 }}>
                     <Grid container>
                       <Grid item xs={12} md={4}>
-                        <img
-                          src="https://via.placeholder.com/500x300/000000/FFFFFF?text=No%20Image%20Available"
-                          height={200}
-                        ></img>
+                        <CardMedia
+                          component="img"
+                          image={"/fallback.jpg"}
+                          alt={hotel.hotel_name}
+                          sx={{
+                            width: "100%",
+                            height: "200px",
+                            objectFit: "cover",
+                          }}
+                        />
                       </Grid>
                       <Grid item xs={12} md={8}>
                         <CardContent>
@@ -103,12 +161,9 @@ const Hotels = () => {
                             {hotel.long_description}
                           </Typography>
                           <Typography variant="body2" color="textSecondary">
-                            Located at: {hotel.address.street},{" "}
-                            {hotel.address.city}, {hotel.address.state}
-                          </Typography>
-                          <Typography variant="h6" color="primary">
-                            {/* Assuming you have pricing data */}
-                            $500 per night
+                            Located at: {hotel.address?.street || "N/A"},{" "}
+                            {hotel.address?.city || "N/A"},{" "}
+                            {hotel.address?.state || "N/A"}
                           </Typography>
                           <Box
                             display="flex"
@@ -116,7 +171,13 @@ const Hotels = () => {
                             justifyContent="space-between"
                             mt={2}
                           >
-                            <Button variant="contained" color="secondary">
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              onClick={() =>
+                                navigate(`/hotels/${hotel.hotel_id}`)
+                              }
+                            >
                               More Details
                             </Button>
                             <Box display="flex" alignItems="center">
@@ -128,9 +189,6 @@ const Hotels = () => {
                                 My Shortlist
                               </Typography>
                             </Box>
-                            {/* Assuming the hotel rating comes as part of the data */}
-                            <Rating value={4} readOnly />{" "}
-                            {/* Set actual rating if available */}
                           </Box>
                         </CardContent>
                       </Grid>

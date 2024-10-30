@@ -1,6 +1,6 @@
 import { Router } from "express";
 import FlightController from "../controllers/FlightController.js";
-import HotelController from "../controllers/HotelController.js";
+import { getHotels, getHotelById } from "../controllers/HotelController.js";
 import AirportController from "../controllers/AirportController.js";
 import AirlineController from "../controllers/AirlineController.js";
 
@@ -12,6 +12,7 @@ router.post("/searchflights", FlightController.SearchFlights);
 router.get("/airport", AirportController.getAllAirport);
 router.get("/airline",AirlineController.getAllAirlines);
 
-router.get("/gethotels", HotelController);
+router.get("/gethotels", getHotels);
+router.post("/hotelDetail", getHotelById);
 
 export default router;
