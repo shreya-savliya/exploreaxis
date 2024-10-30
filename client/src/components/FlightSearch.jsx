@@ -1,7 +1,7 @@
+// src/components/FlightSearch.jsx
 import React, { useState } from "react";
 import {
   Box,
-  TextField,
   MenuItem,
   IconButton,
   Select,
@@ -27,7 +27,7 @@ const FlightSearch = () => {
   const [dateRange, setDateRange] = useState([dayjs(), dayjs()]);
   const [passengerClass, setPassengerClass] = useState("Economy");
 
-  const locations = ["Lahore", "Karachi", "Islamabad", "Peshawar", "Quetta"]; // example locations
+  const locations = ["Lahore", "Karachi", "Islamabad", "Peshawar", "Quetta"];
   const location = useLocation();
 
   const handleSwap = () => {
@@ -40,7 +40,7 @@ const FlightSearch = () => {
     <Box
       sx={{
         ...(location.pathname !== "/" && {
-          border: `1px solid ${colors.basics.secondary}`,
+          border: `1px solid ${colors?.basics?.secondary || "#ccc"}`,
           borderRadius: "6px",
           padding: 2,
         }),
@@ -107,6 +107,7 @@ const FlightSearch = () => {
             </Select>
           </FormControl>
         </Box>
+
         {/* Trip Type */}
         <Box sx={{ width: { xs: "100%", md: "200px" } }}>
           <FormControl fullWidth>
@@ -121,11 +122,14 @@ const FlightSearch = () => {
             </Select>
           </FormControl>
         </Box>
+
+        {/* Date Range Picker */}
         <Box sx={{ width: { xs: "100%", md: "200px" } }}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateRangePicker
+              value={dateRange}
+              onChange={(newValue) => setDateRange(newValue)}
               slots={{ field: SingleInputDateRangeField }}
-              name="allowedRange"
             />
           </LocalizationProvider>
         </Box>
@@ -145,17 +149,17 @@ const FlightSearch = () => {
             </Select>
           </FormControl>
         </Box>
+
+        {/* Search Button */}
         <Button
-          startIcon={<SearchIcon fontSize="large" />}
+          variant="contained"
+          startIcon={<SearchIcon />}
           sx={{
-            borderColor: colors.basics.primary,
+            backgroundColor: colors?.basics?.primary || "#1976d2",
             width: { xs: "100%", md: "auto" },
           }}
         >
-          <Typography
-            variant="span"
-            sx={{ display: { xs: "block", md: "none" } }}
-          >
+          <Typography variant="button" sx={{ display: { xs: "block", md: "inline" } }}>
             Search
           </Typography>
         </Button>
@@ -165,3 +169,5 @@ const FlightSearch = () => {
 };
 
 export default FlightSearch;
+
+
