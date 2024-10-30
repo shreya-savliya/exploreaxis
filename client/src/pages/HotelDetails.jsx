@@ -14,10 +14,10 @@ import {
   List,
   ListItem,
   ListItemText,
-  Divider,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import HotelMap from "../components/HotelMap";
+import RoomList from "../components/RoomList";
 
 const HotelDetails = () => {
   const { id } = useParams();
@@ -27,7 +27,7 @@ const HotelDetails = () => {
   useEffect(() => {
     const fetchHotelById = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/hotelDetail`, {
+        const response = await fetch(`http://localhost:8000/hotelDetail`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -35,8 +35,6 @@ const HotelDetails = () => {
           body: JSON.stringify({ id }),
         });
         const data = await response.json();
-        console.log(data);
-
         setHotel(data);
       } catch (error) {
         console.error("Error fetching hotel data:", error);
@@ -87,7 +85,7 @@ const HotelDetails = () => {
               sx={{ objectFit: "cover" }}
             />
           </Grid>
-
+  
           <Grid item xs={12} md={6}>
             <CardContent>
               <Typography variant="h4" gutterBottom>
@@ -118,9 +116,6 @@ const HotelDetails = () => {
                   </ListItem>
                 )) || <Typography>No amenities available</Typography>}
               </List>
-              <Typography variant="h6" color="primary" paragraph>
-                $500 per night{" "}
-              </Typography>
               <Rating value={4} readOnly />{" "}
               <Box mt={4}>
                 <Button variant="contained" color="primary" sx={{ mr: 2 }}>
@@ -134,7 +129,20 @@ const HotelDetails = () => {
           </Grid>
         </Grid>
       </Card>
-
+  
+      {hotel.roomId && hotel.roomId.length > 0 && (
+        <Box mt={4}>
+          <Typography variant="h5" gutterBottom>
+            Available Rooms
+          </Typography>
+          <Grid container spacing={2}>
+            {hotel.roomId.map((roomId) => (
+              <RoomList key={roomId} roomId={roomId} />
+            ))}
+          </Grid>
+        </Box>
+      )}
+  
       {hotel.latitude && hotel.longitude && (
         <Box mt={4}>
           <Typography variant="h5" gutterBottom>
@@ -145,6 +153,7 @@ const HotelDetails = () => {
       )}
     </Container>
   );
+  
 };
 
 export default HotelDetails;
