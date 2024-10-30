@@ -44,7 +44,7 @@ const FlightCard = ({ flight }) => {
                 color={colors.basics.primary}
                 sx={{ display: { xs: "block", md: "none" } }}
               >
-                starting from ${flight.price}
+                ${flight.price}
               </Typography>
             </Box>
           </Grid>
@@ -79,13 +79,12 @@ const FlightCard = ({ flight }) => {
               alignItems="center"
             >
               <Box>
-                <Checkbox />
                 <Typography variant="body2">12:00 pm - 01:28 pm</Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Emirates, non stop
+                  {flight.airline_name}, {flight?.layover?.length == 0 ? 'non stop' : `${flight?.layover?.length} stop`} 
                 </Typography>
               </Box>
-              <Typography variant="body2">2h 28m</Typography>
+              <Typography variant="body2">{flight?.total_travel_time}</Typography>
               <Typography variant="body2" color="textSecondary">
                 EWR-BNA
               </Typography>
@@ -99,13 +98,12 @@ const FlightCard = ({ flight }) => {
               alignItems="center"
             >
               <Box>
-                <Checkbox />
                 <Typography variant="body2">12:00 pm - 01:28 pm</Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Emirates, non stop
+                {flight.airline_name}, {flight?.layover?.length == 0 ? 'non stop' : `${flight?.layover?.length} stop`} 
                 </Typography>
               </Box>
-              <Typography variant="body2">2h 28m</Typography>
+              <Typography variant="body2">{flight?.total_travel_time}</Typography>
               <Typography variant="body2" color="textSecondary">
                 EWR-BNA
               </Typography>
@@ -123,7 +121,7 @@ const FlightCard = ({ flight }) => {
               color={colors.basics.primary}
               sx={{ display: { xs: "none", md: "block" } }}
             >
-              starting from ${flight.price}
+              ${flight.price}
             </Typography>
             <Button
               variant="contained"
@@ -136,7 +134,7 @@ const FlightCard = ({ flight }) => {
                 },
               }}
             >
-              View Deals
+              Book Now
             </Button>
           </Grid>
         </Grid>

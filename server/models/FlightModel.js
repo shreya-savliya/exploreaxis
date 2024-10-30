@@ -1,77 +1,45 @@
 import mongoose from "mongoose";
-import { v4 as uuidv4 } from "uuid";
 
-
-const segmentSchema = new mongoose.Schema({
-    segment_id: {
-        type: String,
-        default: uuidv4(),
-        unique: true
-    },
-    departure_airport_code: {
-        type: String,
-        required: true
-    },
-    arrival_airport_code: {
-        type: String,
-        required: true
-    },
-    departure_time: {
-        type: Date,
-        required: true
-    },
-    arrival_time: {
-        type: Date,
-        required: true
-    },
-    travel_duration: {
-        type: String,
-        required: true
-    }
-}, { _id: false });
-
-
-const flightSchema = new mongoose.Schema({
-    flight_id: {
-        type: String,
-        default: uuidv4(),
-        unique: true
-    },
-    airline_code: {
-        type: String,
-        required: true
-    },
-    segments: {
-        type: [segmentSchema],
-        required: true
-    },
-    stops: {
-        type: Number,
-        default: 0
-    },
-    price: {
-        type: Number,
-        required: true
-    },
-    travel_class: {
-        type: String,
-        required: true,
-        enum: ['Economy', 'Premium Economy', 'Business', 'First Class']
-    },
-    flight_trip_type: {
-        type: String,
-        required: true,
-        enum: ['One-way', 'Round-trip', 'Multi-city']
-    },
-    travel_days: {
-        type: String,
-        required: true
-    }
-}, {
-    timestamps: true
+const SegmentSchema = new mongoose.Schema({
+  departure_time: { type: Date, required: true },
+  departure_airport_code: { type: String, required: true },
+  travel_time: { type: String, required: true },
+  airline_code: { type: String, required: true },
+  travel_class: { type: String, required: true },
+  destination_time: { type: Date, required: true },
+  destination_airport_code: { type: String, required: true },
 });
 
+const LayoverSchema = new mongoose.Schema({
+  time: { type: String, required: true },
+  airport_code: { type: String, required: true },
+});
 
-const FlightModel = mongoose.model('Flight', flightSchema);
+const TravelClassSchema = new mongoose.Schema({
+  class: { type: String, required: true },
+  price: { type: Number, required: true },
+  checked_bags: { type: Number, required: true },
+  carry_on_includes: { type: Boolean, required: true },
+  seat_choice: { type: Boolean, required: true },
+  refundable: { type: Boolean, required: true },
+  change_fee: { type: Number, required: true },
+  cancellation_fee: { type: Number, required: true },
+});
+
+const FlightSchema = new mongoose.Schema({
+  airline_code: { type: String, required: true },
+  departure_time: { type: Date, required: true },
+  departure_airport_code: { type: String, required: true },
+  destination_time: { type: Date, required: true },
+  destination_airport_code: { type: String, required: true },
+  total_travel_time: { type: String, required: true },
+  trip_type: { type: String, required: true },
+  layover: [LayoverSchema],
+  segments: [SegmentSchema],
+  facilities: { type: [String], default: [] },
+  travel_classes: [TravelClassSchema],
+});
+
+const FlightModel = mongoose.model("flight", FlightSchema);
 
 export default FlightModel;
