@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Flight from "./pages/Flight";
 import Hotels from "./pages/Hotels";
 import FlightDetailPage from "./components/FlightDetailPage";
+import HotelDetails from "./pages/HotelDetails";
 
 const App = () => {
   return (
@@ -23,6 +24,10 @@ const App = () => {
         <Navbar />
         <Box component={"main"} sx={{ flex: 1 }}>
           <Routes>
+            <Route path="/" exact element={<Home />} />
+            <Route path="/flights" exact element={<Flight />} />
+            <Route path="/hotels" exact element={<Hotels />} />
+            <Route path="/hotels/:id" element={<HotelDetails />} />
             <Route path="/" element={<Home />} />
             <Route path="/flights" element={<Flight />} />
             <Route path="/flights/details/:id" element={<FlightDetailPage />} /> {/* Dynamic Route */}

@@ -4,23 +4,23 @@ import FlightSortTabs from "./FlightSortTabs";
 import FlightCard from "./FlightCard";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useSelector } from "react-redux";
 
 const FlightListing = () => {
   const [sortOption, setSortOption] = useState("Best");
   const [flightData, setFlightData] = useState([]);
-  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     GetAllFlightsData();
   }, []);
 
+  useEffect(() => {
+    setFlightData(searchFlight);
+  }, [searchFlight]);
+
   const GetAllFlightsData = async () => {
-    try {
-      const response = await axios.get("http://localhost:4000/getflights");
-      setFlightData(response.data);
-    } catch (error) {
-      console.error("Error fetching flight data:", error);
-    }
+    // const response = await axios.get("http://localhost:4000/getflights");
+    setFlightData(searchFlight);
   };
 
   const handleSortChange = (newSortOption) => {
@@ -42,7 +42,7 @@ const FlightListing = () => {
       <FlightSortTabs onSortChange={handleSortChange} />
 
       <Grid container spacing={2} mt={2}>
-        {sortedFlights.map((flight) => (
+        {flightData.map((flight) => (
           <Grid item xs={12} key={flight.id}>
             <FlightCard
               flight={flight}
