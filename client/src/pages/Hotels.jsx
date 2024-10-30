@@ -32,7 +32,7 @@ const Hotels = () => {
   useEffect(() => {
     const fetchHotels = async () => {
       try {
-        const response = await fetch("http://localhost:8000/gethotels");
+        const response = await fetch("http://localhost:4000/gethotels");
         const data = await response.json();
         setHotels(data);
         setFilteredHotels(data);
@@ -52,7 +52,7 @@ const Hotels = () => {
       for (const hotel of hotels) {
         for (const roomId of hotel.roomId) {
           try {
-            const response = await fetch("http://localhost:8000/roomDetail", {
+            const response = await fetch("http://localhost:4000/roomDetail", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

@@ -97,6 +97,7 @@ class FlightController {
           };
         })
       );
+      console.log(enrichedFlights,"enrichedFlights")
       res.status(200).json(enrichedFlights);
     } catch (error) {
       res.status(500).json({ message: "Error searching flights", error });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Slider,
   Checkbox,
@@ -10,49 +10,132 @@ import {
   Divider,
 } from "@mui/material";
 import { colors } from "../styles/colors";
+import { useSelector, useDispatch } from "react-redux"; // Add useDispatch import
+import { updateFilteredFlights } from "../services/FlightDetails";
 
 const FilterSidebar = () => {
-  const [priceRange, setPriceRange] = useState([50, 1200]);
-  const [departureTime, setDepartureTime] = useState([0, 24]);
+  const dispatch = useDispatch(); // Initialize useDispatch
   const [rating, setRating] = useState(0);
-  const [airlines, setAirlines] = useState({
-    Emirated: false,
-    FlyDubai: false,
-    Qatar: false,
-    Etihad: false,
-  });
-  const [trips, setTrips] = useState({
-    RoundTrip: false,
-    OnWay: false,
-    MultiCity: false,
-    FlexibleDates: false,
-  });
+  const [stops, setStops] = useState([]);
+  const [airlines, setAirlines] = useState([]);
+  const [price, setPrice] = useState({ min: 0, max: 0 });
+  const [flightData, setFlightData] = useState([]);
+  const [selectedPrice, setSelectedPrice] = useState([50, 5000]);
+  const [selectedAirlines, setSelectedAirlines] = useState({});
 
-  // Handle changes for sliders
+  const searchFlightData = useSelector(
+    (state) => state?.searchFlights?.flights
+  );
+
+  useEffect(() => {
+    setFlightData([...searchFlightData]);
+    const stopsArray = searchFlightData?.map((flight) => {
+      console.log(flight,"flights")
+      const layovers = flight?.layover?.length;
+      return layovers === 0
+        ? "Non-stop"
+        : `${layovers} Stop${layovers > 1 ? "s" : ""}`;
+    });
+    const airlinesArray = [
+      ...new Set(searchFlightData?.map((flight) => flight.airline_name)),
+    ];
+    const prices = searchFlightData?.flatMap((flight) =>
+      flight.travel_classes?.map((travelClass) => travelClass.price)
+    );
+    const priceRange = {
+      min: Math.min(...prices),
+      max: Math.max(...prices),
+    };
+    console.log(priceRange,"priceRange")
+    // Set state
+    setStops(stopsArray);
+    setAirlines(airlinesArray);
+    setPrice(priceRange);
+    setSelectedPrice([priceRange.min, priceRange.max]);
+  }, [searchFlightData]);
+
+  // Handle changes for price range
   const handlePriceChange = (event, newValue) => {
-    setPriceRange(newValue);
-  };
-
-  const handleDepartureTimeChange = (event, newValue) => {
-    setDepartureTime(newValue);
+    setSelectedPrice(newValue);
   };
 
   // Handle changes for checkboxes
   const handleAirlinesChange = (event) => {
-    setAirlines({ ...airlines, [event.target.name]: event.target.checked });
-  };
-
-  const handleTripsChange = (event) => {
-    setTrips({ ...trips, [event.target.name]: event.target.checked });
+    const { name, checked } = event.target;
+    setSelectedAirlines((prevState) => ({
+      ...prevState,
+      [name]: checked,
+    }));
   };
 
   // Handle rating button clicks
   const handleRatingClick = (value) => {
     setRating(value);
   };
-  function valuetext(value) {
-    return `${value}`;
-  }
+
+  const filterFlights = () => {
+    let filteredData = [...searchFlightData];
+  
+    console.log("Initial Data:", searchFlightData);
+    console.log("Selected Price:", selectedPrice);
+    console.log("Selected Rating:", rating);
+    console.log("Selected Stops:", stops);
+    console.log("Selected Airlines:", selectedAirlines);
+  
+    // Filter based on price range if selectedPrice is not at full range
+    if (selectedPrice[0] !== price.min || selectedPrice[1] !== price.max) {
+      filteredData = filteredData.filter((flight) =>
+        flight.travel_classes?.some(
+          (travelClass) =>
+            travelClass.price >= selectedPrice[0] &&
+            travelClass.price <= selectedPrice[1]
+        )
+      );
+    }
+    console.log("Filtered by Price:", filteredData);
+  
+    // Filter based on rating if rating is greater than 0
+    if (rating > 0) {
+      filteredData = filteredData.filter((flight) => flight.rating >= rating);
+    }
+    console.log("Filtered by Rating:", filteredData);
+  
+    // Filter based on stops if any stop options are selected
+    if (stops.length > 0) {
+      filteredData = filteredData.filter((flight) => {
+        const layovers = flight?.layover?.length;
+        const stopsFilter =
+          layovers === 0
+            ? "Non-stop"
+            : `${layovers} Stop${layovers > 1 ? "s" : ""}`;
+        return stops.includes(stopsFilter);
+      });
+    }
+    console.log("Filtered by Stops:", filteredData);
+  
+    // Filter based on selected airlines if any airlines are checked
+    const selectedAirlinesList = Object.keys(selectedAirlines).filter(
+      (airline) => selectedAirlines[airline]
+    );
+    if (selectedAirlinesList.length > 0) {
+      filteredData = filteredData.filter((flight) =>
+        selectedAirlinesList.includes(flight.airline_name)
+      );
+    }
+    console.log("Filtered by Airlines:", filteredData);
+  
+    // Dispatch the finalized filtered data
+    dispatch(updateFilteredFlights(filteredData));
+  };
+  
+  // useEffect to trigger `filterFlights` when filters change
+  useEffect(() => {
+    filterFlights();
+  }, [selectedPrice, rating, stops, selectedAirlines]);
+  
+
+  const valuetext = (value) => `${value}`;
+console.log(selectedPrice,"selectedPrice")
   return (
     <Box
       sx={{
@@ -66,42 +149,43 @@ const FilterSidebar = () => {
       <Typography variant="h6">Price</Typography>
 
       <Slider
-        aria-label="Always visible"
-        defaultValue={50}
+        value={selectedPrice}
         onChange={handlePriceChange}
+        min={price.min}
+        max={price.max}
         getAriaValueText={valuetext}
+        valueLabelDisplay="auto"
         step={1}
-        max={5000}
         marks={[
           {
-            value: 0,
-            label: "$50",
+            value: price.min,
+            label: `$${price.min}`,
           },
           {
-            value: 5000,
-            label: "$5000",
+            value: price.max,
+            label: `$${price.max}`,
           },
         ]}
-        valueLabelDisplay="auto"
       />
       <Divider sx={{ my: 2 }} />
 
       <Typography variant="h6">Stops</Typography>
       <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
         <FormGroup>
-          {[1, 2].map((stop) => (
-            <FormControlLabel
-              key={stop}
-              control={
-                <Checkbox
-                  checked={stop}
-                  onChange={handleAirlinesChange}
-                  name={stop}
-                />
-              }
-              label={stop === 1 ? `${stop} stop` : `${stop} stops`}
-            />
-          ))}
+          {stops.length > 0 &&
+            stops?.map((stop) => (
+              <FormControlLabel
+                key={stop}
+                control={
+                  <Checkbox
+                    checked={stop}
+                    onChange={handleAirlinesChange}
+                    name={stop}
+                  />
+                }
+                label={stop}
+              />
+            ))}
         </FormGroup>
       </Box>
 
@@ -125,65 +209,20 @@ const FilterSidebar = () => {
 
       <Typography variant="h6">Airlines</Typography>
       <FormGroup>
-        {Object.keys(airlines).map((airline) => (
-          <FormControlLabel
-            key={airline}
-            control={
-              <Checkbox
-                checked={airlines[airline]}
-                onChange={handleAirlinesChange}
-                name={airline}
-              />
-            }
-            label={airline}
-          />
-        ))}
-      </FormGroup>
-
-      <Divider sx={{ my: 2 }} />
-
-      <Typography variant="h6">Trips</Typography>
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={trips.RoundTrip}
-              onChange={handleTripsChange}
-              name="RoundTrip"
+        {airlines?.length > 0 &&
+          airlines?.map((airline) => (
+            <FormControlLabel
+              key={airline}
+              control={
+                <Checkbox
+                  checked={!!selectedAirlines[airline]}
+                  onChange={handleAirlinesChange}
+                  name={airline}
+                />
+              }
+              label={airline}
             />
-          }
-          label="Round trip"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={trips.OnWay}
-              onChange={handleTripsChange}
-              name="OnWay"
-            />
-          }
-          label="On Way"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={trips.MultiCity}
-              onChange={handleTripsChange}
-              name="MultiCity"
-            />
-          }
-          label="Multi-City"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={trips.FlexibleDates}
-              onChange={handleTripsChange}
-              name="FlexibleDates"
-            />
-          }
-          label="My Dates Are Flexible"
-        />
+          ))}
       </FormGroup>
     </Box>
   );

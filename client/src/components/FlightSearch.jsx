@@ -23,17 +23,20 @@ import { useDispatch } from "react-redux";
 import { searchFlightDetailsData } from "../services/FlightDetails";
 
 const FlightSearch = () => {
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
-  const [tripType, setTripType] = useState("Return");
-  const [dateRange, setDateRange] = useState([dayjs(), dayjs()]);
+  const [from, setFrom] = useState("ORD");
+  const [to, setTo] = useState("CDG");
+  const [tripType, setTripType] = useState("One-way");
+  const [dateRange, setDateRange] = useState([
+    dayjs("2024-12-01"),
+    dayjs("2024-12-01"),
+  ]);
   const [passengerClass, setPassengerClass] = useState("Economy");
   const [airportData, setAirportData] = useState([]);
 
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+ 
   const handleSwap = () => {
     const temp = from;
     setFrom(to);
@@ -46,7 +49,7 @@ const FlightSearch = () => {
       const returnDate =
         tripType === "Return" ? dateRange[1].format("YYYY-MM-DD") : null;
 
-      const response = await axios.post("http://localhost:8000/searchflights", {
+      const response = await axios.post("http://localhost:4000/searchflights", {
         departureAirportCode: from,
         arrivalAirportCode: to,
         departureDate,
@@ -54,6 +57,7 @@ const FlightSearch = () => {
         passengerClass,
       });
       if (response?.data) {
+        console.log(response?.data, "");
         dispatch(searchFlightDetailsData([...response?.data]));
         navigate("/flights");
       }
@@ -65,15 +69,15 @@ const FlightSearch = () => {
   };
 
   useEffect(() => {
-    
+    location.pathname === "/flights" && handleSearch();
     AirportDetails();
   }, []);
 
   const AirportDetails = async () => {
-    const airport = await axios.get("http://localhost:8000/airport");
+    const airport = await axios.get("http://localhost:4000/airport");
     setAirportData([...airport?.data?.airports]);
   };
-  
+
   return (
     <Box
       sx={{
@@ -193,20 +197,14 @@ const FlightSearch = () => {
           variant="contained"
           startIcon={<SearchIcon />}
           sx={{
-            backgroundColor: colors?.basics?.primary || "#1976d2",
+            borderColor: colors.basics.primary,
             width: { xs: "100%", md: "auto" },
           }}
           onClick={handleSearch}
-        >
-          <Typography variant="button" sx={{ display: { xs: "block", md: "inline" } }}>
-            Search
-          </Typography>
-        </Button>
+        ></Button>
       </Box>
     </Box>
   );
 };
 
 export default FlightSearch;
-
-

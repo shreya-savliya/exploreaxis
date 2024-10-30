@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   flights: [],
+  filteredFlights: [],
 };
 
 export const FlightDetailsSlice = createSlice({
@@ -12,9 +13,13 @@ export const FlightDetailsSlice = createSlice({
       console.log(action.payload, "searchFlightDetailsData action method");
       state.flights = action.payload;
     },
+    updateFilteredFlights(state, action) {
+      state.filteredFlights = action.payload;
+    },
   },
 });
 
-export const { searchFlightDetailsData } = FlightDetailsSlice.actions;
+export const { searchFlightDetailsData, updateFilteredFlights } =
+  FlightDetailsSlice.actions;
 
 export default FlightDetailsSlice.reducer;
