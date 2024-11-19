@@ -9,6 +9,7 @@ import Flight from "./pages/Flight";
 import Hotels from "./pages/Hotels";
 import FlightDetailPage from "./components/FlightDetailPage";
 import HotelDetails from "./pages/HotelDetails";
+import SignUp from "./components/SignUp";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="/flights/details/:flightId" element={<FlightDetailPage />} /> 
             <Route path="/hotels" exact element={<Hotels />} />
             <Route path="/hotels/:id" element={<HotelDetails />} />
+            <Route path="/sign-up" element={<SignUp />} />
           </Routes>
         </Box>
         <Footer />

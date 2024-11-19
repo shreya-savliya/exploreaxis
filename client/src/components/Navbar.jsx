@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Box,
@@ -14,11 +14,14 @@ import {
   ListItemIcon,
   useScrollTrigger,
   Slide,
+  Avatar,
+  Menu,
+  MenuItem,
+  Typography,
 } from "@mui/material";
 import logo from "../assets/images/logo-transparent.png";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useNavigate } from "react-router-dom";
-import { colors } from "../styles/colors";
+import { Link, useNavigate } from "react-router-dom";
 import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
 import LocalHotelIcon from "@mui/icons-material/LocalHotel";
 
@@ -35,6 +38,7 @@ const navItems = [
     route: "/hotels",
   },
 ];
+
 function HideOnScroll(props) {
   const { children, window } = props;
   const trigger = useScrollTrigger({
@@ -47,12 +51,41 @@ function HideOnScroll(props) {
     </Slide>
   );
 }
+
 const Navbar = ({ window }) => {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null); // Anchor for user menu
   const navigate = useNavigate();
+
+  // Fetch user session data
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/auth/session", {
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error("Error fetching user session:", error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
+  };
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   const drawer = (
@@ -60,8 +93,21 @@ const Navbar = ({ window }) => {
       <Box
         sx={{ display: { xs: "flex" }, flexDirection: "column", gap: "10px" }}
       >
-        <Button variant="text">Login</Button>
-        <Button variant="contained">Signup</Button>
+        {!user ? (
+          <>
+            <Button variant="text" onClick={() => navigate("/login")}>
+              Login
+            </Button>
+            <Button variant="contained" onClick={() => navigate("/sign-up")}>
+              Signup
+            </Button>
+          </>
+        ) : (
+          <Box>
+            <Avatar src={user.image} alt={user.name} />
+            <Typography>{user.name}</Typography>
+          </Box>
+        )}
       </Box>
       <List>
         {navItems.map((item, index) => (
@@ -107,6 +153,7 @@ const Navbar = ({ window }) => {
             <Box sx={{ display: "flex" }}>
               {navItems.map((item, index) => (
                 <Button
+                  key={index}
                   variant="text"
                   startIcon={item?.icon}
                   onClick={() => navigate(item.route)}
@@ -120,7 +167,7 @@ const Navbar = ({ window }) => {
           <Box
             component="img"
             src={logo}
-            alt="Explore axis Logo"
+            alt="Explore Axis Logo"
             sx={{
               height: 50,
               cursor: "pointer",
@@ -133,13 +180,36 @@ const Navbar = ({ window }) => {
             }}
           />
           <Box sx={{ display: { sm: "flex", xs: "none" }, gap: "20px" }}>
-            <Button variant="text">Login</Button>
-            <Button
-              variant="contained"
-              sx={{ borderColor: colors.basics.primary }}
-            >
-              Signup
-            </Button>
+            {!user ? (
+              <>
+                <Link to="/login">Login</Link>
+                <Button
+                  variant="contained"
+                  sx={{ borderColor: "#007BFF" }}
+                  onClick={() => navigate("/sign-up")}
+                >
+                  Signup
+                </Button>
+              </>
+            ) : (
+              <Box>
+                <Avatar
+                  src={user.image}
+                  alt={user.name}
+                  sx={{ cursor: "pointer" }}
+                  onClick={handleMenuOpen}
+                />
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                >
+                  <MenuItem>{user.name}</MenuItem>
+                  <MenuItem>{user.email}</MenuItem>
+                  <a href="http://localhost:8000/auth/signout">Logout</a>
+                </Menu>
+              </Box>
+            )}
           </Box>
         </AppBar>
       </HideOnScroll>

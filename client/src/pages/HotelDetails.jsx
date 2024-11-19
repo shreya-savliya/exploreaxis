@@ -18,6 +18,7 @@ import {
 import { useParams } from "react-router-dom";
 import HotelMap from "../components/HotelMap";
 import RoomList from "../components/RoomList";
+import AddCustomRoomForm from "../components/AddCustomRoomForm";
 
 const HotelDetails = () => {
   const { id } = useParams();
@@ -27,7 +28,7 @@ const HotelDetails = () => {
   useEffect(() => {
     const fetchHotelById = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/hotelDetail`, {
+        const response = await fetch(`http://localhost:8000/hotelDetail`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -142,6 +143,8 @@ const HotelDetails = () => {
           </Grid>
         </Box>
       )}
+
+      <AddCustomRoomForm />
   
       {hotel.latitude && hotel.longitude && (
         <Box mt={4}>

@@ -31,7 +31,7 @@ const FlightDetails = () => {
     // Fetch flight data from API
     const fetchFlightDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/getflights/${flightId}`);
+        const response = await axios.get(`http://localhost:8000/getflights/${flightId}`);
         setFlightData(response.data);
       } catch (error) {
         console.error("Error fetching flight details:", error);

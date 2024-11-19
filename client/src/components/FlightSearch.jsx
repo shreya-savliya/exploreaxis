@@ -49,7 +49,7 @@ const FlightSearch = () => {
       const returnDate =
         tripType === "Return" ? dateRange[1].format("YYYY-MM-DD") : null;
 
-      const response = await axios.post("http://localhost:4000/searchflights", {
+      const response = await axios.post("http://localhost:8000/searchflights", {
         departureAirportCode: from,
         arrivalAirportCode: to,
         departureDate,
@@ -74,7 +74,7 @@ const FlightSearch = () => {
   }, []);
 
   const AirportDetails = async () => {
-    const airport = await axios.get("http://localhost:4000/airport");
+    const airport = await axios.get("http://localhost:8000/airport");
     setAirportData([...airport?.data?.airports]);
   };
 
