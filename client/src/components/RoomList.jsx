@@ -17,7 +17,7 @@ const RoomList = ({ roomId }) => {
   useEffect(() => {
     const fetchRoomById = async () => {
       try {
-        const response = await fetch("http://localhost:4000/roomDetail", {
+        const response = await fetch("http://localhost:8000/roomDetail", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
