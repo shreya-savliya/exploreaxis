@@ -63,9 +63,12 @@ const Navbar = ({ window }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/session`, {
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/auth/session`,
+          {
+            credentials: "include",
+          }
+        );
         if (response.ok) {
           const data = await response.json();
           setUser(data.user);
@@ -89,6 +92,10 @@ const Navbar = ({ window }) => {
     setAnchorEl(null);
   };
 
+  const handleUserAuthenticated = (userData) => {
+    setUser(userData);
+  };
+
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center", p: "20px" }}>
       <Box
@@ -105,7 +112,9 @@ const Navbar = ({ window }) => {
           </>
         ) : (
           <Box>
-            <Avatar src={user.image} alt={user.name} />
+            <Avatar>
+              {user.name?.charAt(0).toUpperCase()}
+            </Avatar>
             <Typography>{user.name}</Typography>
           </Box>
         )}
@@ -183,23 +192,16 @@ const Navbar = ({ window }) => {
           <Box sx={{ display: { sm: "flex", xs: "none" }, gap: "20px" }}>
             {!user ? (
               <>
-                <Link to="/login">Login</Link>
-                <Button
-                  variant="contained"
-                  sx={{ borderColor: "#007BFF" }}
-                  onClick={() => navigate("/sign-up")}
-                >
-                  Signup
-                </Button>
+                <LoginRegisterDialog onUserAuthenticated={handleUserAuthenticated} />
               </>
             ) : (
               <Box>
                 <Avatar
-                  src={user.image}
-                  alt={user.name}
                   sx={{ cursor: "pointer" }}
                   onClick={handleMenuOpen}
-                />
+                >
+                  {user.name?.charAt(0).toUpperCase()}
+                </Avatar>
                 <Menu
                   anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
@@ -207,7 +209,9 @@ const Navbar = ({ window }) => {
                 >
                   <MenuItem>{user.name}</MenuItem>
                   <MenuItem>{user.email}</MenuItem>
-                  <a href={`${process.env.REACT_APP_API_URL}/auth/signout`}>Logout</a>
+                  <a href={`${process.env.REACT_APP_API_URL}/auth/signout`}>
+                    Logout
+                  </a>
                 </Menu>
               </Box>
             )}
