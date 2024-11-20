@@ -17,7 +17,7 @@ const RoomList = ({ roomId }) => {
   useEffect(() => {
     const fetchRoomById = async () => {
       try {
-        const response = await fetch("http://localhost:8000/roomDetail", {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/roomDetail`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

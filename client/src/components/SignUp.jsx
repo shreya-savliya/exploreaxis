@@ -20,7 +20,7 @@ const SignUp = () => {
     if (isGoogleSignIn) {
       setLoading(true);
       // Fetch Google user data from the backend
-      fetch("http://localhost:8000/auth/session", {
+      fetch(`${process.env.REACT_APP_API_URL}/auth/session`, {
         credentials: "include", // Include cookies
       })
         .then((res) => res.json())
@@ -55,7 +55,7 @@ const SignUp = () => {
 
   const handleGoogleSignIn = () => {
     // Redirect to the backend for Google Sign-In
-    window.location.href = "http://localhost:8000/auth/signin";
+    window.location.href = `${process.env.REACT_APP_API_URL}/auth/signin`;
   };
 
   return (

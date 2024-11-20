@@ -45,7 +45,7 @@ const AddCustomRoomForm = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:8000/addCustomRoom", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/addCustomRoom`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

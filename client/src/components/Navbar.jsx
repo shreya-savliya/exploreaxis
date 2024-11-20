@@ -24,6 +24,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link, useNavigate } from "react-router-dom";
 import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
 import LocalHotelIcon from "@mui/icons-material/LocalHotel";
+import LoginRegisterDialog from "./LoginRegisterDialog";
 
 const drawerWidth = 240;
 const navItems = [
@@ -62,7 +63,7 @@ const Navbar = ({ window }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch("http://localhost:8000/auth/session", {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/session`, {
           credentials: "include",
         });
         if (response.ok) {
@@ -206,7 +207,7 @@ const Navbar = ({ window }) => {
                 >
                   <MenuItem>{user.name}</MenuItem>
                   <MenuItem>{user.email}</MenuItem>
-                  <a href="http://localhost:8000/auth/signout">Logout</a>
+                  <a href={`${process.env.REACT_APP_API_URL}/auth/signout`}>Logout</a>
                 </Menu>
               </Box>
             )}

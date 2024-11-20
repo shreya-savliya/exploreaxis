@@ -28,7 +28,7 @@ const HotelDetails = () => {
   useEffect(() => {
     const fetchHotelById = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/hotelDetail`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/hotelDetail`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
