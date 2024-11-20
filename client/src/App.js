@@ -9,7 +9,8 @@ import Flight from "./pages/Flight";
 import Hotels from "./pages/Hotels";
 import FlightDetailPage from "./components/FlightDetailPage";
 import HotelDetails from "./pages/HotelDetails";
-import SignUp from "./components/SignUp";
+import TravelerDetailsForm from "./pages/TravelerDetailsForm";
+import CheckoutPage from "./pages/CheckoutPage";
 
 const App = () => {
   return (
@@ -23,16 +24,22 @@ const App = () => {
         }}
       >
         <Navbar />
-        <Box component={"main"} sx={{ flex: 1 }}>
+
+        <Box component="main" sx={{ flex: 1 }}>
           <Routes>
-            <Route path="/" exact element={<Home />} />
-            <Route path="/flights" exact element={<Flight />} />
-            <Route path="/flights/details/:flightId" element={<FlightDetailPage />} /> 
-            <Route path="/hotels" exact element={<Hotels />} />
-            <Route path="/hotels/:id" element={<HotelDetails />} />
-            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/flights" element={<Flight />} />
+            <Route
+              path="/flights/details/:flightId"
+              element={<FlightDetailPage />}
+            />
+            <Route path="/hotels" element={<Hotels />} />
+            <Route path="/hotels/details/:hotelId" element={<HotelDetails />} />
+            <Route path="/travelers" element={<TravelerDetailsForm />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
           </Routes>
         </Box>
+
         <Footer />
       </Box>
     </ThemeProvider>
