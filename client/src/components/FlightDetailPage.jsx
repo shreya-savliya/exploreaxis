@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
   Box,
@@ -25,12 +25,13 @@ import FareUpgradeSelection from "./FareUpgradeSelection";
 import dayjs from "dayjs";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import ItinerarySummary from "./ItinerarySummary";
+import TravelerDetailsForm from "../pages/TravelerDetailsForm";
 
 const FlightDetails = () => {
   const { flightId } = useParams(); // Fetch flightId from route params
   const [flightData, setFlightData] = useState(null);
   const [airports, setAirports] = useState({});
-
+  const navigate = useNavigate();
   useEffect(() => {
     // Fetch flight data from API
     const fetchFlightDetails = async () => {
@@ -304,6 +305,9 @@ const FlightDetails = () => {
         variant="contained"
         color="primary"
         sx={{ borderColor: colors.basics.primary, mt: "10px" }}
+        onClick={() => {
+          navigate("/checkout");
+        }}
       >
         Book now
       </Button>

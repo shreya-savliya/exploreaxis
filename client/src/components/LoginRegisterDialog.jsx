@@ -16,6 +16,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useSearchParams } from "react-router-dom";
 import { colors } from "../styles/colors";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 function LoginRegisterDialog({ onUserAuthenticated }) {
   const [open, setOpen] = useState(false);
