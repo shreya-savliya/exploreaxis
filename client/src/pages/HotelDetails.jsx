@@ -15,26 +15,32 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import HotelMap from "../components/HotelMap";
 import RoomList from "../components/RoomList";
 import AddCustomRoomForm from "../components/AddCustomRoomForm";
+import { useDispatch } from "react-redux";
+import { setSelectedFarePrice } from "../services/FarePrice";
 
 const HotelDetails = () => {
   const { id } = useParams();
   const [hotel, setHotel] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchHotelById = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/hotelDetail`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/hotelDetail`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id }),
+          }
+        );
         const data = await response.json();
         setHotel(data);
       } catch (error) {
@@ -72,7 +78,7 @@ const HotelDetails = () => {
       </Box>
     );
   }
-
+  console.log(hotel, "hotel");
   return (
     <Container maxWidth="lg" sx={{ mt: 10, mb: 4 }}>
       <Card>
@@ -86,7 +92,7 @@ const HotelDetails = () => {
               sx={{ objectFit: "cover" }}
             />
           </Grid>
-  
+
           <Grid item xs={12} md={6}>
             <CardContent>
               <Typography variant="h4" gutterBottom>
@@ -104,8 +110,8 @@ const HotelDetails = () => {
                 {hotel.long_description}
               </Typography>
               <Typography variant="body2" color="textSecondary" paragraph>
-                Address: {hotel.address.street}, {hotel.address.city},{" "}
-                {hotel.address.state}, {hotel.address.country}
+                Address: {hotel.address?.street}, {hotel.address?.city},{" "}
+                {hotel.address?.state}, {hotel.address?.country}
               </Typography>
               <Typography variant="h6" gutterBottom>
                 Amenities:
@@ -119,7 +125,15 @@ const HotelDetails = () => {
               </List>
               <Rating value={4} readOnly />{" "}
               <Box mt={4}>
-                <Button variant="contained" color="primary" sx={{ mr: 2 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ mr: 2 }}
+                  onClick={() => {
+                    navigate("/checkout");
+                    dispatch(setSelectedFarePrice(500));
+                  }}
+                >
                   Book Now
                 </Button>
                 <Button variant="outlined" color="secondary">
@@ -130,7 +144,7 @@ const HotelDetails = () => {
           </Grid>
         </Grid>
       </Card>
-  
+
       {hotel.roomId && hotel.roomId.length > 0 && (
         <Box mt={4}>
           <Typography variant="h5" gutterBottom>
@@ -145,7 +159,7 @@ const HotelDetails = () => {
       )}
 
       <AddCustomRoomForm />
-  
+
       {hotel.latitude && hotel.longitude && (
         <Box mt={4}>
           <Typography variant="h5" gutterBottom>
@@ -156,7 +170,6 @@ const HotelDetails = () => {
       )}
     </Container>
   );
-  
 };
 
 export default HotelDetails;

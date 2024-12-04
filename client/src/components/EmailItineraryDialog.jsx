@@ -36,7 +36,7 @@ const EmailItineraryDialog = ({ open, handleClose }) => {
   const sendItineraryEmail = async (email) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/send-itinerary",
+        `${process.env.REACT_APP_API_URL}/send-itinerary`,
         {
           email: email,
           itinerary: "hello here is my first itinerary from Exploreaxis",

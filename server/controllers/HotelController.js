@@ -14,7 +14,7 @@ const getHotels = async (req, res) => {
 const getHotelById = async (req, res) => {
   try {
     const { id } = req.body;
-
+    console.log(id, "id");
     // Find the hotel by the hotel_id field
     const hotel = await Hotel.findOne({ hotel_id: id });
     console.log(hotel);

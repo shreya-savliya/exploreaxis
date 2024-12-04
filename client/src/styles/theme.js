@@ -133,7 +133,6 @@ const componentOptions = {
         textTransform: "none",
         padding: "14px 23px",
         fontWeight: 500,
-        backgroundColor: colors.basics.secondary,
         "&:hover": {
           boxShadow: theme.shadows[0],
         },
