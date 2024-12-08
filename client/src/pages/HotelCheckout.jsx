@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -16,7 +16,7 @@ import {
   FormControl,
 } from "@mui/material";
 
-function HotelCheckout({ type, price, persons }) {
+function HotelCheckout({ type, price, persons, onFormDataSubmit }) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -27,7 +27,7 @@ function HotelCheckout({ type, price, persons }) {
   });
 
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false); // Track if the form is being submitted
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -69,10 +69,14 @@ function HotelCheckout({ type, price, persons }) {
     const validationErrors = validateFields();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      return; // Stop submission if there are validation errors
+      return;
     }
 
-    setIsSubmitting(true); // Disable the form
+    setIsSubmitting(true);
+
+    // Pass the form data to the parent component
+    onFormDataSubmit(formData);
+
     console.log("Form Submitted:", formData);
     alert("Checkout form submitted!");
   };
@@ -89,7 +93,6 @@ function HotelCheckout({ type, price, persons }) {
             sx={{ mb: 2, color: "green", fontWeight: "bold" }}
           >
             {type} room type for {persons} person(s) at {price}$
-            <br />
           </Typography>
 
           <Divider sx={{ mb: 3 }} />
@@ -107,8 +110,7 @@ function HotelCheckout({ type, price, persons }) {
                 error={!!errors.firstName}
                 helperText={errors.firstName}
                 required
-                disabled={isSubmitting} // Disable on submission
-                sx={{ marginBottom: errors.firstName ? "8px" : "24px" }}
+                disabled={isSubmitting}
               />
             </Grid>
 
@@ -124,8 +126,7 @@ function HotelCheckout({ type, price, persons }) {
                 error={!!errors.lastName}
                 helperText={errors.lastName}
                 required
-                disabled={isSubmitting} // Disable on submission
-                sx={{ marginBottom: errors.lastName ? "8px" : "24px" }}
+                disabled={isSubmitting}
               />
             </Grid>
 
@@ -142,8 +143,7 @@ function HotelCheckout({ type, price, persons }) {
                 error={!!errors.email}
                 helperText={errors.email}
                 required
-                disabled={isSubmitting} // Disable on submission
-                sx={{ marginBottom: errors.email ? "8px" : "24px" }}
+                disabled={isSubmitting}
               />
             </Grid>
 
@@ -174,8 +174,7 @@ function HotelCheckout({ type, price, persons }) {
                 error={!!errors.phone}
                 helperText={errors.phone}
                 required
-                disabled={isSubmitting} // Disable on submission
-                sx={{ marginBottom: errors.phone ? "8px" : "24px" }}
+                disabled={isSubmitting}
               />
             </Grid>
 
@@ -186,7 +185,7 @@ function HotelCheckout({ type, price, persons }) {
                   <Checkbox
                     checked={formData.receiveTextAlerts}
                     onChange={handleCheckboxChange}
-                    disabled={isSubmitting} // Disable on submission
+                    disabled={isSubmitting}
                   />
                 }
                 label="Receive text alerts about this trip. Message frequency varies. Standard messaging rates apply."
@@ -200,11 +199,7 @@ function HotelCheckout({ type, price, persons }) {
               variant="contained"
               color="primary"
               onClick={handleSubmit}
-              disabled={isSubmitting} // Disable button on submission
-              sx={{
-                backgroundColor: isSubmitting ? "grey.400" : "primary.main",
-                cursor: isSubmitting ? "not-allowed" : "pointer",
-              }}
+              disabled={isSubmitting}
             >
               {isSubmitting ? "Data Submitted" : "Submit"}
             </Button>

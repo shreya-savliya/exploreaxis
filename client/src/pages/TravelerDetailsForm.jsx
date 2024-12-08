@@ -1,32 +1,37 @@
+// TravelerDetailsForm.js
 import React, { useState } from "react";
 import {
   Box,
   Button,
-  TextField,
   Grid,
-  Typography,
-  Card,
-  CardContent,
   Divider,
-  IconButton,
+  Card,
+  Typography,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import TravelerForm from "../components/TravelerForm";
 import { colors } from "../styles/colors";
-import { setNumberOfAdults } from "../services/FarePrice";
-import { useDispatch } from "react-redux";
+import TravelerForm from "../components/TravelerForm"; 
 
-function TravelerDetailsForm() {
-  const [passengers, setPassengers] = useState([{ id: 1 }]); // Use an array to track passengers
+function TravelerDetailsForm({ onFormDataSubmit }) {
+  const [passengers, setPassengers] = useState([
+    { id: 1, firstName: "", lastName: "", dob: "", phone: "", email: "" },
+  ]); // Initialize with one passenger
   const [formErrors, setFormErrors] = useState([]);
-  const dispatch = useDispatch();
 
   const handleAddPassenger = () => {
     setPassengers((prevPassengers) => [
       ...prevPassengers,
-      { id: prevPassengers.length + 1 },
+      {
+        id:
+          prevPassengers.length > 0
+            ? prevPassengers[prevPassengers.length - 1].id + 1
+            : 1,
+        firstName: "",
+        lastName: "",
+        dob: "",
+        phone: "",
+        email: "",
+      },
     ]);
-    dispatch(setNumberOfAdults(passengers.length + 1));
   };
 
   const handleRemovePassenger = (id) => {
@@ -35,102 +40,89 @@ function TravelerDetailsForm() {
         (passenger) => passenger.id !== id
       );
       setPassengers(updatedPassengers);
-      dispatch(setNumberOfAdults(updatedPassengers.length));
     }
+  };
+
+  const handleInputChange = (id, field, value) => {
+    setPassengers((prevPassengers) =>
+      prevPassengers.map((passenger) =>
+        passenger.id === id ? { ...passenger, [field]: value } : passenger
+      )
+    );
   };
 
   const validateForm = () => {
     const errors = [];
-
-    passengers.forEach((passenger, i) => {
-      const firstName = document.getElementById(
-        `firstName-${passenger.id}`
-      ).value;
-      const lastName = document.getElementById(
-        `lastName-${passenger.id}`
-      ).value;
-      const dob = document.getElementById(`dob-${passenger.id}`).value;
-      const phone = document.getElementById(`phone-${passenger.id}`).value;
-      const email = document.getElementById(`email-${passenger.id}`).value;
+    const travelers = passengers.map((passenger) => {
+      const { firstName, lastName, dob, phone, email } = passenger;
 
       if (!firstName || !lastName) {
-        errors.push(`Traveler ${i + 1}: First and last name are required.`);
+        errors.push(
+          `Traveler ${passenger.id}: First and last name are required.`
+        );
       }
       if (dob && new Date(dob) > new Date()) {
         errors.push(
-          `Traveler ${i + 1}: Date of birth cannot be in the future.`
+          `Traveler ${passenger.id}: Date of birth cannot be in the future.`
         );
       }
-
-      const phoneRegex = /^[0-9]{10}$/;
-      if (!phone || !phone.match(phoneRegex)) {
+      if (!/^\d{10}$/.test(phone)) {
         errors.push(
-          `Traveler ${i + 1}: Please enter a valid 10-digit phone number.`
+          `Traveler ${passenger.id}: Please enter a valid 10-digit phone number.`
+        );
+      }
+      if (
+        !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
+      ) {
+        errors.push(
+          `Traveler ${passenger.id}: Please enter a valid email address.`
         );
       }
 
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!email || !email.match(emailRegex)) {
-        errors.push(`Traveler ${i + 1}: Please enter a valid email address.`);
-      }
+      return { firstName, lastName, dob, phone, email };
     });
 
-    if (passengers.length < 1) {
-      errors.push("Please enter at least 1 passenger.");
-    }
-
     setFormErrors(errors);
-    return errors.length === 0;
+    return errors.length === 0 ? travelers : null;
   };
 
   const handleSubmit = () => {
-    if (validateForm()) {
-      alert("Form submitted successfully");
+    const travelers = validateForm();
+    if (travelers) {
+      console.log(travelers);
+      onFormDataSubmit({ travelers }); // Pass traveler data to the parent component
     }
   };
 
   return (
-    <Box sx={{ mt: 2 }}>
+    <Box>
       <Card sx={{ mb: 4, padding: 3 }}>
-        <CardContent>
+        <Box>
           <Typography
             variant="h6"
-            sx={{ mb: 2, fontWeight: "bold", color: colors.basics.primary }}
+            sx={{ fontWeight: "bold", color: colors.basics.primary }}
           >
-            Important Information
+            Traveler Details
           </Typography>
-          <Typography variant="body1" sx={{ lineHeight: 1.6, color: "#555" }}>
-            Please enter your first name, middle name (if applicable), and last
-            name exactly as they appear on your passport/ID. If there is a
-            middle name, please enter it in the name field.
+          <Typography
+            variant="body2"
+            sx={{ mt: 1, color: colors.basics.secondary }}
+          >
+            Please enter traveler information exactly as it appears on their
+            passport/ID.
           </Typography>
-        </CardContent>
+        </Box>
       </Card>
 
-      <Grid container spacing={2} sx={{ mb: 4 }}>
-        <Button variant="text" color="primary" onClick={handleAddPassenger}>
-          Add New Passenger
-        </Button>
-      </Grid>
-
-      <Divider sx={{ mb: 3 }} />
-
-      {passengers.map((passenger, index) => (
-        <Box key={passenger.id} sx={{ mb: 2, position: "relative" }}>
+      {passengers.map((passenger) => (
+        <Box key={passenger.id} sx={{ mb: 4, position: "relative" }}>
           <TravelerForm
-            travelerNumber={index + 1}
+            travelerNumber={passenger.id}
             formErrors={formErrors}
-            passengerId={passenger.id}
+            passenger={passenger}
+            onInputChange={handleInputChange}
+            onRemovePassenger={handleRemovePassenger}
           />
-          {passengers.length > 1 && (
-            <IconButton
-              aria-label="delete"
-              onClick={() => handleRemovePassenger(passenger.id)}
-              sx={{ position: "absolute", top: 0, right: 0 }}
-            >
-              <DeleteIcon />
-            </IconButton>
-          )}
         </Box>
       ))}
 
@@ -146,20 +138,29 @@ function TravelerDetailsForm() {
         </Box>
       )}
 
-      <Grid container justifyContent="center" mt={4}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          sx={{
-            width: "200px",
-            borderColor: colors.basics.primary,
-            display: "none",
-          }}
-          onClick={handleSubmit}
-        >
-          Submit
-        </Button>
+      <Divider sx={{ mb: 3 }} />
+
+      <Grid container justifyContent="center">
+        <Grid item>
+          <Button
+            variant="text"
+            color="primary"
+            onClick={handleAddPassenger}
+            sx={{ textTransform: "none" }}
+          >
+            Add Another Traveler
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+            sx={{ ml: 2, textTransform: "none" }}
+          >
+            Next
+          </Button>
+        </Grid>
       </Grid>
     </Box>
   );

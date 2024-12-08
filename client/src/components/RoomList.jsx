@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setSelectedFarePrice } from "../services/FarePrice";
 
-const RoomList = ({ roomId }) => {
+const RoomList = ({ roomId, hotelId }) => {
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -99,7 +99,7 @@ const RoomList = ({ roomId }) => {
               color="primary"
               sx={{ mr: 2 }}
               onClick={() => {
-                navigate("/checkout", { state: { name: 'hotelDetails', type: room.room_type, persons: room.allowed_person, price: room.price } });
+                navigate("/checkout", { state: { name: 'hotelDetails', type: room.room_type, persons: room.allowed_person, price: room.price, roomId, hotelId } });
                 dispatch(setSelectedFarePrice(500));
               }}
             >

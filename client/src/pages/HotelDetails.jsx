@@ -136,7 +136,7 @@ const HotelDetails = () => {
           </Typography>
           <Grid container spacing={2}>
             {hotel.roomId.map((roomId) => (
-              <RoomList key={roomId} roomId={roomId} />
+              <RoomList key={roomId} roomId={roomId} hotelId={id} />
             ))}
           </Grid>
         </Box>
