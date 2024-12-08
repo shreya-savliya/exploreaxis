@@ -11,8 +11,8 @@ import {
   Checkbox,
   FormGroup,
   FormControlLabel,
-  FormLabel,
   Slider,
+  TextField,
   Container,
   CircularProgress,
 } from "@mui/material";
@@ -25,6 +25,12 @@ const Hotels = () => {
   const [priceRange, setPriceRange] = useState([50, 1200]);
   const [selectedServices, setSelectedServices] = useState([]);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const [manualFilters, setManualFilters] = useState({
+    hotelName: "",
+    city: "",
+    state: "",
+    country: "",
+  });
 
   const navigate = useNavigate();
 
@@ -100,6 +106,12 @@ const Hotels = () => {
     );
   };
 
+  // Handle manual filter input changes
+  const handleManualFilterChange = (event) => {
+    const { name, value } = event.target;
+    setManualFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
+  };
+
   // Apply all filters to the hotels and rooms
   useEffect(() => {
     const applyFilters = () => {
@@ -140,11 +152,40 @@ const Hotels = () => {
         return matchingRooms.length > 0; // Return hotel if any rooms match
       });
 
+      // Apply manual filters
+      if (manualFilters.hotelName) {
+        filtered = filtered.filter((hotel) =>
+          hotel.hotel_name.toLowerCase().includes(manualFilters.hotelName.toLowerCase())
+        );
+      }
+      if (manualFilters.city) {
+        filtered = filtered.filter((hotel) =>
+          hotel.address.city?.toLowerCase().includes(manualFilters.city.toLowerCase())
+        );
+      }
+      if (manualFilters.state) {
+        filtered = filtered.filter((hotel) =>
+          hotel.address.state?.toLowerCase().includes(manualFilters.state.toLowerCase())
+        );
+      }
+      if (manualFilters.country) {
+        filtered = filtered.filter((hotel) =>
+          hotel.address.country?.toLowerCase().includes(manualFilters.country.toLowerCase())
+        );
+      }
+
       setFilteredHotels(filtered);
     };
 
     applyFilters();
-  }, [hotels, roomsData, priceRange, selectedServices, selectedAmenities]);
+  }, [
+    hotels,
+    roomsData,
+    priceRange,
+    selectedServices,
+    selectedAmenities,
+    manualFilters,
+  ]);
 
   return (
     <Container maxWidth="xl">
@@ -261,6 +302,43 @@ const Hotels = () => {
                   label="Fitness Center"
                 />
               </FormGroup>
+
+              {/* Manual Filters */}
+              <Typography variant="subtitle1" sx={{ mt: 2 }}>
+                Additional Filters
+              </Typography>
+              <TextField
+                label="Hotel Name"
+                name="hotelName"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                onChange={handleManualFilterChange}
+              />
+              <TextField
+                label="City"
+                name="city"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                onChange={handleManualFilterChange}
+              />
+              <TextField
+                label="State"
+                name="state"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                onChange={handleManualFilterChange}
+              />
+              <TextField
+                label="Country"
+                name="country"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                onChange={handleManualFilterChange}
+              />
             </Box>
           </Grid>
 
@@ -301,9 +379,8 @@ const Hotels = () => {
                               {hotel.long_description}
                             </Typography>
                             <Typography variant="body2" color="textSecondary">
-                              Located at: {hotel.address?.street || "N/A"},{" "}
-                              {hotel.address?.city || "N/A"},{" "}
-                              {hotel.address?.state || "N/A"}
+                              Address: {hotel.address?.street}, {hotel.address?.city},{" "}
+                              {hotel.address?.state}, {hotel.address?.country}
                             </Typography>
                             <Box
                               display="flex"
@@ -320,14 +397,14 @@ const Hotels = () => {
                               >
                                 More Details
                               </Button>
-                            </Box>
+                            </Box>  
                           </CardContent>
                         </Grid>
                       </Grid>
                     </Card>
                   ))
                 ) : (
-                  <h4>No Hotels Found!</h4>
+                  <Typography variant="h6">No Hotels Found!</Typography>
                 )}
               </React.Suspense>
             </Box>
