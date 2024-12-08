@@ -25,7 +25,6 @@ import FareUpgradeSelection from "./FareUpgradeSelection";
 import dayjs from "dayjs";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import ItinerarySummary from "./ItinerarySummary";
-import TravelerDetailsForm from "../pages/TravelerDetailsForm";
 
 const FlightDetails = () => {
   const { flightId } = useParams(); // Fetch flightId from route params
@@ -39,6 +38,8 @@ const FlightDetails = () => {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/getflights/${flightId}`
         );
+        console.log(response.data.flight_id);
+
         setFlightData(response.data);
       } catch (error) {
         console.error("Error fetching flight details:", error);
@@ -69,6 +70,8 @@ const FlightDetails = () => {
     return <Typography>Loading...</Typography>;
   }
   const getAirportDetails = (code) => airports[code] || {};
+
+  console.log(flightData.flight_id);
 
   return (
     <Container maxWidth="xl" sx={{ mt: "80px" }}>
@@ -306,7 +309,13 @@ const FlightDetails = () => {
         color="primary"
         sx={{ borderColor: colors.basics.primary, mt: "10px" }}
         onClick={() => {
-          navigate("/checkout", { state: 'flightDetails' });
+          try {
+            navigate("/checkout", {
+              state: { name: "flightDetails", flightId: flightData?.flight_id, price: flightData?.price },
+            });
+          } catch (e) {
+            console.log(e);
+          }
         }}
       >
         Book now

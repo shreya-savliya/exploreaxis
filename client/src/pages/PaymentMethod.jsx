@@ -15,18 +15,19 @@ import {
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // Load Stripe with your publishable key
-const stripePromise = loadStripe("pk_test_A7jK4iCYHL045qgjjfzAfPxu"); // Replace with your Stripe publishable key
+const stripePromise = loadStripe("pk_test_A7jK4iCYHL045qgjjfzAfPxu");
 
-const CheckoutForm = ({ onPaymentSuccess }) => {
+const CheckoutForm = ({ formData, onPaymentSuccess }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
-  // Form fields state
   const [nameOnCard, setNameOnCard] = useState("");
+  const location = useLocation();
+  const { price } = location?.state?.formData;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -39,7 +40,6 @@ const CheckoutForm = ({ onPaymentSuccess }) => {
       return;
     }
 
-    // Get the card details from the CardElement
     const cardElement = elements.getElement(CardElement);
 
     // Create payment method
@@ -59,12 +59,36 @@ const CheckoutForm = ({ onPaymentSuccess }) => {
 
     console.log("PaymentMethod created:", paymentMethod);
 
-    // Simulate successful payment
-    setTimeout(() => {
+    // Simulate successful payment and call backend API
+    try {
+      const response = await fetch(
+        formData.flightId
+          ? `${process.env.REACT_APP_API_URL}/flight-order`
+          : `${process.env.REACT_APP_API_URL}/hotel-order`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...formData,
+            totalPrice: price,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log("Order saved:", result);
+        onPaymentSuccess(); // Trigger success dialog
+        cardElement.clear(); // Clear card details
+      } else {
+        setErrorMessage(result.message || "Failed to save order.");
+      }
+    } catch (err) {
+      setErrorMessage(err.message || "An error occurred while saving the order.");
+    } finally {
       setLoading(false);
-      onPaymentSuccess(); // Trigger success dialog
-      cardElement.clear(); // Clear card details after successful payment
-    }, 1500);
+    }
   };
 
   return (
@@ -82,6 +106,7 @@ const CheckoutForm = ({ onPaymentSuccess }) => {
           />
         </Grid>
 
+        {/* Card Element */}
         <Grid item xs={12}>
           <Box
             sx={{
@@ -136,6 +161,12 @@ const CheckoutForm = ({ onPaymentSuccess }) => {
 const PaymentMethod = () => {
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const formData = location.state?.formData || {};
+  console.log(formData);
+  
 
   const handleTabChange = (event, newValue) => {
     setPaymentMethod(newValue);
@@ -147,6 +178,7 @@ const PaymentMethod = () => {
 
   const handleDialogClose = () => {
     setIsDialogOpen(false); // Close dialog
+    navigate("/"); // Navigate to success page or home
   };
 
   return (
@@ -173,7 +205,7 @@ const PaymentMethod = () => {
 
       {paymentMethod === "card" && (
         <Elements stripe={stripePromise}>
-          <CheckoutForm onPaymentSuccess={handlePaymentSuccess} />
+          <CheckoutForm formData={formData} onPaymentSuccess={handlePaymentSuccess} />
         </Elements>
       )}
 
