@@ -306,7 +306,7 @@ const FlightDetails = () => {
         color="primary"
         sx={{ borderColor: colors.basics.primary, mt: "10px" }}
         onClick={() => {
-          navigate("/checkout");
+          navigate("/checkout", { state: 'flightDetails' });
         }}
       >
         Book now

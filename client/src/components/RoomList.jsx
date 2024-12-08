@@ -8,22 +8,31 @@ import {
   Chip,
   Box,
   CircularProgress,
+  Button,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setSelectedFarePrice } from "../services/FarePrice";
 
 const RoomList = ({ roomId }) => {
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchRoomById = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/roomDetail`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ roomId }),
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/roomDetail`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ roomId }),
+          }
+        );
 
         const roomData = await response.json();
         setRoom(roomData);
@@ -65,9 +74,7 @@ const RoomList = ({ roomId }) => {
           </Typography>
           <Typography variant="body2" color="textSecondary">
             Beds:{" "}
-            {room.beds
-              .map((bed) => `${bed.quantity} ${bed.type}`)
-              .join(", ")}
+            {room.beds.map((bed) => `${bed.quantity} ${bed.type}`).join(", ")}
           </Typography>
           <Typography variant="body1" color="primary" sx={{ mt: 1 }}>
             ${room.price} per night
@@ -85,6 +92,19 @@ const RoomList = ({ roomId }) => {
               color="primary"
               size="small"
             />
+          </Box>
+          <Box mt={4}>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mr: 2 }}
+              onClick={() => {
+                navigate("/checkout", { state: { name: 'hotelDetails', type: room.room_type, persons: room.allowed_person, price: room.price } });
+                dispatch(setSelectedFarePrice(500));
+              }}
+            >
+              Book Now
+            </Button>
           </Box>
         </CardContent>
       </Card>

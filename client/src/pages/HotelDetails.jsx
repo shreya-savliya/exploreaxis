@@ -124,22 +124,6 @@ const HotelDetails = () => {
                 )) || <Typography>No amenities available</Typography>}
               </List>
               <Rating value={4} readOnly />{" "}
-              <Box mt={4}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ mr: 2 }}
-                  onClick={() => {
-                    navigate("/checkout");
-                    dispatch(setSelectedFarePrice(500));
-                  }}
-                >
-                  Book Now
-                </Button>
-                <Button variant="outlined" color="secondary">
-                  Add to Shortlist
-                </Button>
-              </Box>
             </CardContent>
           </Grid>
         </Grid>
@@ -158,7 +142,6 @@ const HotelDetails = () => {
         </Box>
       )}
 
-      <AddCustomRoomForm />
 
       {hotel.latitude && hotel.longitude && (
         <Box mt={4}>

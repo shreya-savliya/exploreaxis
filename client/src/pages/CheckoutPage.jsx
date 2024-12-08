@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -10,6 +10,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import TravelerDetailsForm from "./TravelerDetailsForm";
+import HotelCheckout from "./HotelCheckout"; // Import HotelCheckout component
 import ItinerarySummary from "../components/ItinerarySummary";
 import { colors } from "../styles/colors";
 
@@ -18,37 +19,46 @@ const CheckoutPage = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    trigger,
+  } = useForm(); // Add `trigger` for manual validation
   const navigate = useNavigate();
   const location = useLocation();
-  const [previousPath, setPreviousPath] = useState("");
-  const prevLocationRef = useRef();
-  useEffect(() => {
-    // On component mount or location change, update the previous path state
-    setPreviousPath(prevLocationRef.current);
-    prevLocationRef.current = location.pathname;
-  }, [location]);
 
-  const shouldRenderTravelerForm =
-    previousPath && previousPath.startsWith("/flights/details/");
+  const isFromFlightPage = location.state === "flightDetails";
+  const isFromHotelPage = location.state?.name === "hotelDetails";
+
+  const handleProceedToPayment = async () => {
+    const isValid = await trigger(); // Trigger validation for all fields
+    if (isValid) {
+      navigate("/payment"); // Navigate only if the form is valid
+    } else {
+      console.log("Form validation failed. Fix errors before proceeding.");
+    }
+  };
+
   const onSubmit = (data) => {
     console.log("Form Data:", data);
-    // Navigate to payment page
-    alert("payment sucessfully");
-    // navigate("/payment");
+    alert("Payment successful!");
   };
 
   return (
     <Container maxWidth="xl" sx={{ mt: "80px" }}>
-      <Box sx={{ display: "flex" }}>
-        <TravelerDetailsForm />
+      <Box sx={{ display: "flex", mb: 4 }}>
+        {isFromFlightPage && <TravelerDetailsForm />}
+        {isFromHotelPage && (
+          <HotelCheckout
+            type={location.state.type}
+            persons={location.state.persons}
+            price={location.state.price}
+          />
+        )}
 
         <Box sx={{ width: "100%", maxWidth: "300px" }}>
           <ItinerarySummary />
         </Box>
       </Box>
 
-      <Box sx={{}}>
+      <Box>
         <Typography variant="h4" gutterBottom fontSize={"18px"}>
           Billing details will be sent to
         </Typography>
@@ -88,7 +98,9 @@ const CheckoutPage = () => {
                     label="Last Name"
                     fullWidth
                     error={!!errors.lastName}
-                    helperText={errors.lastName ? errors.lastName.message : ""}
+                    helperText={
+                      errors.lastName ? errors.lastName.message : ""
+                    }
                   />
                 )}
               />
@@ -118,6 +130,7 @@ const CheckoutPage = () => {
                 )}
               />
             </Grid>
+
             {/* Mobile Number */}
             <Grid item xs={12}>
               <Controller
@@ -148,10 +161,11 @@ const CheckoutPage = () => {
             {/* Proceed to Payment Button */}
             <Grid item xs={12}>
               <Button
-                type="submit"
+                type="button" // Change to "button" to prevent form submission
                 variant="contained"
                 color="primary"
                 sx={{ borderColor: colors.basics.primary }}
+                onClick={handleProceedToPayment} // Trigger validation and navigation
               >
                 Proceed to Payment
               </Button>

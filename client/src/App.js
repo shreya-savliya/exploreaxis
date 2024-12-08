@@ -11,6 +11,7 @@ import FlightDetailPage from "./components/FlightDetailPage";
 import HotelDetails from "./pages/HotelDetails";
 import TravelerDetailsForm from "./pages/TravelerDetailsForm";
 import CheckoutPage from "./pages/CheckoutPage";
+import PaymentMethod from "./pages/PaymentMethod";
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
             <Route path="/hotels/:id" element={<HotelDetails />} />
             <Route path="/travelers" element={<TravelerDetailsForm />} />
             <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/payment" element={<PaymentMethod />} />
           </Routes>
         </Box>
 
