@@ -2,8 +2,8 @@ import FlightOrder from "../models/FlightOrder.js";
 
 // Create Flight Order Controller
 export default async function createFlightOrder(req, res) {
-  const { flightId, travelers, totalPrice } = req.body;
-
+  const { flightId, travelers, totalPrice,email } = req.body;
+console.log({flightorderData:req.body})
   // Validate required fields
   if (!flightId) {
     return res.status(400).json({ success: false, message: "Flight ID is required." });
@@ -58,7 +58,7 @@ export default async function createFlightOrder(req, res) {
 
   // Save flight order to the database
   try {
-    const flightOrder = new FlightOrder({ flightId, travelers, totalPrice });
+    const flightOrder = new FlightOrder({ flightId, travelers, totalPrice,email });
     const savedOrder = await flightOrder.save();
     res.status(201).json({ success: true, order: savedOrder });
   } catch (error) {

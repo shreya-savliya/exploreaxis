@@ -31,6 +31,8 @@ import ContentCut from "@mui/icons-material/ContentCut";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
+import { useDispatch } from "react-redux";
+import { setLoggedinUser } from "../services/UserSlice";
 
 const drawerWidth = 240;
 const navItems = [
@@ -64,6 +66,7 @@ const Navbar = ({ window }) => {
   const [user, setUser] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null); // Anchor for user menu
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Fetch user session data
   useEffect(() => {
@@ -78,13 +81,14 @@ const Navbar = ({ window }) => {
         if (response.ok) {
           const data = await response.json();
           setUser(data.user);
+          dispatch(setLoggedinUser(data.user)); // Dispatch user data to Redux
         }
       } catch (error) {
         console.error("Error fetching user session:", error);
       }
     };
     fetchUser();
-  }, []);
+  }, [dispatch]);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -210,13 +214,6 @@ const Navbar = ({ window }) => {
                   open={Boolean(anchorEl)}
                   onClose={handleMenuClose}
                 >
-                  <MenuItem>
-                    <ListItemIcon>
-                      <ContentCut fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>{user.name}</ListItemText>
-                  </MenuItem>{" "}
-                  <Divider />
                   <MenuItem
                     onClick={() => {
                       navigate("/account");

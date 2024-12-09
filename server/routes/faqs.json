@@ -1,0 +1,162 @@
+[
+    {
+        "question": "What is your refund policy?",
+        "answer": "We offer a full refund if the cancellation is made within 24 hours."
+    },
+    {
+        "question": "How to book a flight?",
+        "answer": "Go to the flight section, select your destination, and follow the instructions."
+    },
+    {
+        "question": "Do you offer discounts?",
+        "answer": "Yes, we provide discounts for group bookings and frequent travelers."
+    },
+    {
+        "question": "What are your working hours?",
+        "answer": "We are available 24/7 to assist you with your travel needs."
+    },
+    {
+        "question": "What is ExploreAxis?",
+        "answer": "ExploreAxis is a platform that helps customers find flights, hotels, and travel packages tailored to their needs."
+    },
+    {
+        "question": "How do I create an account?",
+        "answer": "Click on the 'Sign Up' button on the homepage, provide your details, and verify your email address."
+    },
+    {
+        "question": "How can I contact customer support?",
+        "answer": "You can contact our customer support through live chat, email at support@exploreaxis.com, or call us at 1-800-XXX-XXXX."
+    },
+    {
+        "question": "Does ExploreAxis have a mobile app?",
+        "answer": "No, we do not offer a mobile app available."
+    },
+    {
+        "question": "How do I search for flights?",
+        "answer": "Use the search bar to enter your departure and destination cities, travel dates, and the number of passengers."
+    },
+    {
+        "question": "What is the difference between Economy, Premium Economy, Business, and First Class?",
+        "answer": "The main differences are in seat comfort, in-flight services, and pricing. Visit our 'Travel Classes' page for details."
+    },
+    {
+        "question": "Can I book multi-city flights?",
+        "answer": "Yes, select the 'Multi-City' option in the flight search panel."
+    },
+    {
+        "question": "How can I change or cancel my flight?",
+        "answer": "Go to 'My Bookings,' select the flight, and follow the prompts to change or cancel. Note that cancellation fees may apply."
+    },
+    {
+        "question": "What is the baggage allowance for my flight?",
+        "answer": "Baggage policies depend on the airline. Check the 'Baggage Policy' section of your booking details."
+    },
+    {
+        "question": "What if my flight is delayed or canceled?",
+        "answer": "In case of delays or cancellations, the airline will notify you. You can also contact us for assistance."
+    },
+    {
+        "question": "How do I search for hotels?",
+        "answer": "Enter the city, check-in and check-out dates, and the number of guests into the search bar."
+    },
+    {
+        "question": "Can I book multiple rooms?",
+        "answer": "Yes, select the number of rooms during the booking process."
+    },
+    {
+        "question": "What is included in the hotel price?",
+        "answer": "Details about included amenities and meals are mentioned in the hotel listing."
+    },
+    {
+        "question": "How do I modify or cancel a hotel reservation?",
+        "answer": "Go to 'My Bookings,' select the hotel reservation, and choose 'Modify' or 'Cancel.'"
+    },
+    {
+        "question": "What is your refund policy for hotels?",
+        "answer": "Refund policies vary by hotel. Check the cancellation policy in the hotel listing."
+    },
+    {
+        "question": "What are travel packages?",
+        "answer": "Travel packages combine flights, hotels, and sometimes activities at a discounted rate."
+    },
+    {
+        "question": "Can I customize a travel package?",
+        "answer": "Yes, you can contact our customer support to tailor a package to your preferences."
+    },
+    {
+        "question": "Are activities included in travel packages?",
+        "answer": "Some packages include activities; check the package details for specifics."
+    },
+    {
+        "question": "What payment methods are accepted?",
+        "answer": "We accept credit/debit cards, PayPal, and select digital wallets."
+    },
+    {
+        "question": "Is my payment information secure?",
+        "answer": "Yes, we use industry-standard encryption to protect your data."
+    },
+    {
+        "question": "Can I pay in installments?",
+        "answer": "Some bookings allow installment payments. Check the payment options at checkout."
+    },
+    {
+        "question": "Are there any hidden charges?",
+        "answer": "All charges are transparently displayed during booking. Taxes and fees are included in the total price."
+    },
+    {
+        "question": "How can I request special assistance for my flight?",
+        "answer": "Contact us or the airline directly to request special assistance, such as wheelchair services."
+    },
+    {
+        "question": "Can I book a pet-friendly hotel?",
+        "answer": "Yes, use the 'Pet-Friendly' filter when searching for hotels."
+    },
+    {
+        "question": "How do I arrange airport transfers?",
+        "answer": "Airport transfer options are available during the booking process or as an add-on service."
+    },
+    {
+        "question": "Do I need a visa for my trip?",
+        "answer": "Visa requirements depend on your destination. Check with the embassy or consulate of the destination country."
+    },
+    {
+        "question": "Can you help with travel insurance?",
+        "answer": "Yes, we offer travel insurance options during checkout."
+    },
+    {
+        "question": "What documents do I need for international travel?",
+        "answer": "You will need a valid passport, visa (if required), and any other documents specified by the destination country."
+    },
+    {
+        "question": "Does ExploreAxis offer rewards or loyalty programs?",
+        "answer": "Yes, sign up for our ExploreAxis Rewards Program to earn points on bookings."
+    },
+    {
+        "question": "Are there discounts for group bookings?",
+        "answer": "Yes, group discounts are available for certain bookings. Contact our support team for details."
+    },
+    {
+        "question": "I forgot my password. How do I reset it?",
+        "answer": "Click on 'Forgot Password' on the login page and follow the steps to reset it."
+    },
+    {
+        "question": "Why is my payment not going through?",
+        "answer": "Ensure your payment details are correct and contact your bank if the issue persists."
+    },
+    {
+        "question": "How do I update my profile information?",
+        "answer": "Go to 'My Profile' and update your details."
+    },
+    {
+        "question": "What should I do if the website isn’t working?",
+        "answer": "Try refreshing the page or clearing your browser cache. If the issue continues, contact our technical support team."
+    },
+    {
+        "question": "How can I provide feedback about my experience?",
+        "answer": "Visit the 'Feedback' section of our website or email us at feedback@exploreaxis.com."
+    },
+    {
+        "question": "Where can I leave a review for a hotel or flight?",
+        "answer": "After completing your trip, you’ll receive an email prompting you to leave a review."
+    }
+]

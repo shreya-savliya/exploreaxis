@@ -12,10 +12,16 @@ import {
   DialogActions,
   TextField,
 } from "@mui/material";
-import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 // Load Stripe with your publishable key
 const stripePromise = loadStripe("pk_test_A7jK4iCYHL045qgjjfzAfPxu");
@@ -28,7 +34,7 @@ const CheckoutForm = ({ formData, onPaymentSuccess }) => {
   const [nameOnCard, setNameOnCard] = useState("");
   const location = useLocation();
   const { price } = location?.state?.formData;
-
+  const user = useSelector((state) => state.user);
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -70,6 +76,7 @@ const CheckoutForm = ({ formData, onPaymentSuccess }) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...formData,
+            email: user?.user?.email,
             totalPrice: price,
           }),
         }
@@ -85,7 +92,9 @@ const CheckoutForm = ({ formData, onPaymentSuccess }) => {
         setErrorMessage(result.message || "Failed to save order.");
       }
     } catch (err) {
-      setErrorMessage(err.message || "An error occurred while saving the order.");
+      setErrorMessage(
+        err.message || "An error occurred while saving the order."
+      );
     } finally {
       setLoading(false);
     }
@@ -166,7 +175,6 @@ const PaymentMethod = () => {
 
   const formData = location.state?.formData || {};
   console.log(formData);
-  
 
   const handleTabChange = (event, newValue) => {
     setPaymentMethod(newValue);
@@ -205,7 +213,10 @@ const PaymentMethod = () => {
 
       {paymentMethod === "card" && (
         <Elements stripe={stripePromise}>
-          <CheckoutForm formData={formData} onPaymentSuccess={handlePaymentSuccess} />
+          <CheckoutForm
+            formData={formData}
+            onPaymentSuccess={handlePaymentSuccess}
+          />
         </Elements>
       )}
 
@@ -219,7 +230,8 @@ const PaymentMethod = () => {
             Payment Successful!
           </Typography>
           <Typography color="white" variant="body1">
-            Thank you for your purchase. Your payment was processed successfully.
+            Thank you for your purchase. Your payment was processed
+            successfully.
           </Typography>
         </DialogContent>
         <DialogActions>

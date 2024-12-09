@@ -13,6 +13,7 @@ import TravelerDetailsForm from "./pages/TravelerDetailsForm";
 import CheckoutPage from "./pages/CheckoutPage";
 import UserProfile from "./pages/UserProfile";
 import PaymentMethod from "./pages/PaymentMethod";
+import ChatPopup from "./components/Chat";
 
 const App = () => {
   return (
@@ -43,6 +44,7 @@ const App = () => {
             <Route path="/payment" element={<PaymentMethod />} />
           </Routes>
         </Box>
+        <ChatPopup/>
         <Footer />
       </Box>
     </ThemeProvider>

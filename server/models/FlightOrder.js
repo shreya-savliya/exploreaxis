@@ -15,6 +15,7 @@ const FlightOrderSchema = new mongoose.Schema({
   travelers: [TravelerSchema], // Array of traveler details
   totalPrice: { type: Number, required: true }, // Total price of the flight booking
   createdAt: { type: Date, default: Date.now }, // Timestamp for the order
+  email:{type:String}
 });
 
 // Create Mongoose Models
