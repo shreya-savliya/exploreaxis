@@ -12,6 +12,7 @@ import HotelDetails from "./pages/HotelDetails";
 import TravelerDetailsForm from "./pages/TravelerDetailsForm";
 import CheckoutPage from "./pages/CheckoutPage";
 import UserProfile from "./pages/UserProfile";
+import PaymentMethod from "./pages/PaymentMethod";
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ const App = () => {
             <Route path="/travelers" element={<TravelerDetailsForm />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/account" element={<UserProfile />} />
+            <Route path="/payment" element={<PaymentMethod />} />
           </Routes>
         </Box>
         <Footer />

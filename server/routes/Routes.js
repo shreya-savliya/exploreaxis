@@ -11,6 +11,8 @@ import EmailItinerary from "../controllers/EmailItineraryController.js";
 import addCustomRoom from "../controllers/addCustomRoom.js";
 import { loginUser, registerUser } from "../controllers/UserController.js";
 import OpenAI from "openai";
+import createFlightOrder from "../controllers/createFlightOrder.js";
+import createHotelOrder from "../controllers/createHotelOrder.js";
 
 const router = Router();
 const openai = new OpenAI();
@@ -26,6 +28,8 @@ router.get("/gethotels", getHotels);
 router.post("/hotelDetail", getHotelById);
 router.post("/roomDetail", getRoomById);
 router.post("/addCustomRoom", addCustomRoom);
+router.post("/flight-order", createFlightOrder);
+router.post("/hotel-order", createHotelOrder);
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
