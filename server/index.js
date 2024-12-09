@@ -4,7 +4,7 @@ import connectDB from "./config/db.js";
 import applyMiddlewares from "./middlewares/middlewares.js";
 import { ExpressAuth } from "@auth/express";
 import GoogleProvider from "@auth/core/providers/google";
-import cors from 'cors';
+import cors from "cors";
 
 dotenv.config();
 
@@ -32,7 +32,7 @@ app.use(
       }),
     ],
     secret: process.env.AUTH_SECRET,
-    basePath: '/auth',
+    basePath: "/auth",
     debug: true,
     callbacks: {
       async redirect({ url, baseUrl }) {
@@ -50,3 +50,4 @@ applyMiddlewares(app);
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+

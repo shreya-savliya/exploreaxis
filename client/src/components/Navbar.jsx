@@ -18,6 +18,8 @@ import {
   Menu,
   MenuItem,
   Typography,
+  Paper,
+  Divider,
 } from "@mui/material";
 import logo from "../assets/images/logo-transparent.png";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -25,6 +27,10 @@ import { Link, useNavigate } from "react-router-dom";
 import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
 import LocalHotelIcon from "@mui/icons-material/LocalHotel";
 import LoginRegisterDialog from "./LoginRegisterDialog";
+import ContentCut from "@mui/icons-material/ContentCut";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import Settings from "@mui/icons-material/Settings";
+import Logout from "@mui/icons-material/Logout";
 
 const drawerWidth = 240;
 const navItems = [
@@ -112,9 +118,7 @@ const Navbar = ({ window }) => {
           </>
         ) : (
           <Box>
-            <Avatar>
-              {user.name?.charAt(0).toUpperCase()}
-            </Avatar>
+            <Avatar>{user.name?.charAt(0).toUpperCase()}</Avatar>
             <Typography>{user.name}</Typography>
           </Box>
         )}
@@ -192,14 +196,13 @@ const Navbar = ({ window }) => {
           <Box sx={{ display: { sm: "flex", xs: "none" }, gap: "20px" }}>
             {!user ? (
               <>
-                <LoginRegisterDialog onUserAuthenticated={handleUserAuthenticated} />
+                <LoginRegisterDialog
+                  onUserAuthenticated={handleUserAuthenticated}
+                />
               </>
             ) : (
               <Box>
-                <Avatar
-                  sx={{ cursor: "pointer" }}
-                  onClick={handleMenuOpen}
-                >
+                <Avatar sx={{ cursor: "pointer" }} onClick={handleMenuOpen}>
                   {user.name?.charAt(0).toUpperCase()}
                 </Avatar>
                 <Menu
@@ -207,11 +210,34 @@ const Navbar = ({ window }) => {
                   open={Boolean(anchorEl)}
                   onClose={handleMenuClose}
                 >
-                  <MenuItem>{user.name}</MenuItem>
-                  <MenuItem>{user.email}</MenuItem>
-                  <a href={`${process.env.REACT_APP_API_URL}/auth/signout`}>
-                    Logout
-                  </a>
+                  <MenuItem>
+                    <ListItemIcon>
+                      <ContentCut fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>{user.name}</ListItemText>
+                  </MenuItem>{" "}
+                  <Divider />
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/account");
+                    }}
+                  >
+                    <ListItemIcon>
+                      <PersonAdd fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Profile</ListItemText>
+                  </MenuItem>{" "}
+                  <Divider />
+                  <MenuItem
+                    component="a"
+                    href={`${process.env.REACT_APP_API_URL}/auth/signout`}
+                    sx={{ p: 0 }}
+                  >
+                    <ListItemIcon>
+                      <Logout fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Logout</ListItemText>
+                  </MenuItem>
                 </Menu>
               </Box>
             )}
